@@ -12,8 +12,8 @@
 [![Code License: MIT](https://img.shields.io/badge/code%20license-MIT-yellow.svg)](LICENSE)
 [![Content License: CC BY-NC-SA 4.0](https://img.shields.io/badge/content%20license-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE-CC-BY-NC-SA.md)
 [![Julia](https://img.shields.io/badge/julia-1.11.3-9558B2.svg)](https://julialang.org/downloads/)
-[![Lessons](https://img.shields.io/badge/lessons-13-blue.svg)](#course-contents)
-[![Language](https://img.shields.io/badge/course%20language-Russian-red.svg)](#course-language)
+![Lessons](https://img.shields.io/badge/lessons-13-blue.svg)
+![Language](https://img.shields.io/badge/course%20language-Russian-red.svg)
 
 **English** · [Русский](README.ru.md) · [Polski](README.pl.md)
 
@@ -320,7 +320,6 @@ The current edition has been reviewed for:
 
 For the detailed review history, see:
 
-
 ---
 
 ## Contributing
@@ -329,10 +328,10 @@ Issues and pull requests are welcome.
 
 Before contributing:
 
-2. restart the modified notebook kernel;
-3. run the notebook from top to bottom;
-4. make sure saved outputs match the current code;
-5. run:
+1. restart the modified notebook kernel;
+2. run the notebook from top to bottom;
+3. make sure saved outputs match the current code;
+4. run:
 
 ```bash
 python3 tools/check_course.py

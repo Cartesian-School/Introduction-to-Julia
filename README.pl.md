@@ -12,8 +12,8 @@
 [![Code License: MIT](https://img.shields.io/badge/code%20license-MIT-yellow.svg)](LICENSE)
 [![Content License: CC BY-NC-SA 4.0](https://img.shields.io/badge/content%20license-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE-CC-BY-NC-SA.md)
 [![Julia](https://img.shields.io/badge/julia-1.11.3-9558B2.svg)](https://julialang.org/downloads/)
-[![Lessons](https://img.shields.io/badge/lessons-13-blue.svg)](#zawartość-kursu)
-[![Language](https://img.shields.io/badge/course%20language-Russian-red.svg)](#język-kursu)
+![Lessons](https://img.shields.io/badge/lessons-13-blue.svg)
+![Language](https://img.shields.io/badge/course%20language-Russian-red.svg)
 
 [English](README.md) · [Русский](README.ru.md) · **Polski**
 
@@ -320,7 +320,6 @@ Obecna edycja kursu została zweryfikowana pod kątem:
 
 Szczegółową historię audytu znajdziesz w:
 
-
 ---
 
 ## Współtworzenie projektu
@@ -329,10 +328,10 @@ Issues i pull requesty są mile widziane.
 
 Przed wysłaniem zmian:
 
-2. uruchom ponownie kernel zmodyfikowanego notebooka;
-3. wykonaj notebook od początku do końca;
-4. upewnij się, że zapisane outputy odpowiadają aktualnemu kodowi;
-5. uruchom:
+1. uruchom ponownie kernel zmodyfikowanego notebooka;
+2. wykonaj notebook od początku do końca;
+3. upewnij się, że zapisane outputy odpowiadają aktualnemu kodowi;
+4. uruchom:
 
 ```bash
 python3 tools/check_course.py
