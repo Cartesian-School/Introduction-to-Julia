@@ -8,7 +8,7 @@
 
 **A hands-on, 13-lesson course in Julia for scientific and numerical computing.**
 
-[![Course CI](https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml)
+[![Course CI](https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml/badge.svg?branch=main&event=push)](https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml)
 [![Code License: MIT](https://img.shields.io/badge/code%20license-MIT-yellow.svg)](LICENSE)
 [![Content License: CC BY-NC-SA 4.0](https://img.shields.io/badge/content%20license-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE-CC-BY-NC-SA.md)
 [![Julia](https://img.shields.io/badge/julia-1.11.3-9558B2.svg)](https://julialang.org/downloads/)
