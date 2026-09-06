@@ -8,7 +8,7 @@
 
 **A hands-on, 13-lesson course in Julia for scientific and numerical computing.**
 
-[![CI](https://img.shields.io/badge/build-not%20yet%20configured-lightgrey.svg)](.github/workflows/ci.yaml)
+[![Course CI](https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml)
 [![Code License: MIT](https://img.shields.io/badge/code%20license-MIT-yellow.svg)](LICENSE)
 [![Content License: CC BY-NC-SA 4.0](https://img.shields.io/badge/content%20license-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE-CC-BY-NC-SA.md)
 [![Julia](https://img.shields.io/badge/julia-1.11.3-9558B2.svg)](https://julialang.org/downloads/)
@@ -320,8 +320,6 @@ The current edition has been reviewed for:
 
 For the detailed review history, see:
 
-- [`AUDIT_REPORT.md`](AUDIT_REPORT.md)
-- [`TODO.md`](TODO.md)
 
 ---
 
@@ -331,7 +329,6 @@ Issues and pull requests are welcome.
 
 Before contributing:
 
-1. read [`AUDIT_REPORT.md`](AUDIT_REPORT.md);
 2. restart the modified notebook kernel;
 3. run the notebook from top to bottom;
 4. make sure saved outputs match the current code;
@@ -380,7 +377,7 @@ Special thanks to:
 
 ## Maintainer
 
-**Cartesian School**
+Cartesian School
 
 Repository: [github.com/Cartesian-School/Introduction-to-Julia](https://github.com/Cartesian-School/Introduction-to-Julia)
 

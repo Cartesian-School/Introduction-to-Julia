@@ -8,7 +8,7 @@
 #     look for `src/<Name>.jl` during precompilation, which would break the
 #     `Pkg.instantiate()` step documented in README.md.
 # Manifest.toml is committed alongside this file so the environment resolves
-# identically for every student. See AUDIT_REPORT.md, findings MAJ-1 / MAJ-2.
+# identically for every student.
 
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"

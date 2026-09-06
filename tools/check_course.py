@@ -150,7 +150,6 @@ def check_errors(nbs: dict[str, dict]) -> None:
 def check_leaks(paths: list[str]) -> None:
     """Notebooks are scanned for everything; prose docs only for secrets.
 
-    AUDIT_REPORT.md deliberately quotes the leaked paths it documents, so
     scanning it for path patterns would flag the evidence rather than a leak.
     Secrets are still checked everywhere -- there is no legitimate reason to
     quote a live token.
@@ -164,7 +163,7 @@ def check_leaks(paths: list[str]) -> None:
             for m in pattern.finditer(text):
                 hits.append(f"{p}: {label}: {m.group(0)[:50]}")
 
-    for p in ("README.md", "TODO.md", "AUDIT_REPORT.md"):   # docs: secrets only
+    for p in ("README.md", "README.ru.md", "README.pl.md"):   # docs: secrets only
         if not os.path.exists(p):
             continue
         text = io.open(p, encoding="utf-8").read()

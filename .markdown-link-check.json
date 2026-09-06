@@ -1,0 +1,21 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^README\\.md$"
+    },
+    {
+      "pattern": "^README\\.ru\\.md$"
+    },
+    {
+      "pattern": "^README\\.pl\\.md$"
+    },
+    {
+      "pattern": "^Project\\.toml$"
+    },
+    {
+      "pattern": "^Manifest\\.toml$"
+    }
+  ],
+  "retryOn429": true,
+  "retryCount": 3
+}

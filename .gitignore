@@ -55,7 +55,6 @@ docs/site/
 # NOTE: Manifest.toml is intentionally NOT ignored.
 # This repository is an application (a course environment), not a library, so
 # the exact resolved dependency set must be committed for reproducibility.
-# See AUDIT_REPORT.md, finding MAJ-1.
 
 # ---------------------------------------------------------------------------
 # Jupyter / notebooks

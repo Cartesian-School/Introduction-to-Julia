@@ -8,7 +8,7 @@
 
 **Практический курс из 13 занятий по Julia для научных и численных вычислений.**
 
-[![CI](https://img.shields.io/badge/build-not%20yet%20configured-lightgrey.svg)](.github/workflows/ci.yaml)
+[![Course CI](https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml)
 [![Code License: MIT](https://img.shields.io/badge/code%20license-MIT-yellow.svg)](LICENSE)
 [![Content License: CC BY-NC-SA 4.0](https://img.shields.io/badge/content%20license-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE-CC-BY-NC-SA.md)
 [![Julia](https://img.shields.io/badge/julia-1.11.3-9558B2.svg)](https://julialang.org/downloads/)
@@ -320,8 +320,6 @@ Pkg.build("PyCall")
 
 Подробная история аудита:
 
-- [`AUDIT_REPORT.md`](AUDIT_REPORT.md)
-- [`TODO.md`](TODO.md)
 
 ---
 
@@ -331,7 +329,6 @@ Issues и pull requests приветствуются.
 
 Перед отправкой изменений:
 
-1. ознакомьтесь с [`AUDIT_REPORT.md`](AUDIT_REPORT.md);
 2. перезапустите kernel изменённого ноутбука;
 3. выполните ноутбук целиком сверху вниз;
 4. убедитесь, что сохранённые outputs соответствуют текущему коду;
@@ -380,7 +377,7 @@ python3 tools/test_check_course.py
 
 ## Сопровождение курса
 
-**Cartesian School**
+Cartesian School
 
 Репозиторий: [github.com/Cartesian-School/Introduction-to-Julia](https://github.com/Cartesian-School/Introduction-to-Julia)
 
