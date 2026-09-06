@@ -1,127 +1,125 @@
-# TODO — deferred work
+# TODO — remaining work
 
-Items carried over from [`AUDIT_REPORT.md`](AUDIT_REPORT.md) that were **not**
-fixed. Everything requiring a Julia toolchain has now been completed; what
-remains is content authoring and one structural decision.
-
----
-
-## Done — notebook regeneration pass (Julia 1.11.3)
-
-All 13 notebooks were re-executed top-to-bottom with `nbconvert --execute`
-against Julia 1.11.3 on Linux. Recorded here so the next maintainer knows what
-state the outputs are in:
-
-- [x] **MAJ-5** — every notebook now reports kernel `Julia 1.11.3`.
-- [x] **MAJ-7** — execution counts are monotonic `1..N` in all 13.
-- [x] **MAJ-4** — lesson 7's `Pkg.add("Plots")` runs clean; 0 errors.
-- [x] **NEW-2** — lesson 10's Python comparison **works**; 0 errors.
-- [x] **Manifest hash** — `Pkg.resolve()` refreshed `project_hash` with no
-      dependency-version churn, confirming the `[compat]` bounds were correct.
-
-Only **13 error outputs** remain across the whole course, and every one is an
-intentional teaching demonstration (lessons 1, 2, 3, 6, 9 — `MethodError`,
-`ParseError`, `KeyError`, all with explanatory prose around them).
+Status after the professionalization pass on `feat/professionalize-julia-course`.
+Nothing below is marked done unless it was verified by execution or by
+`tools/check_course.py`.
 
 ---
 
-## Content work
+## Done
 
-- [ ] **Add worked solutions to the blank exercises.**
-      Lesson 3 follows a three-cell pattern: `# Ваше решение` → `# Правильное
-      решение:` → `@assert`. Ten exercises across lessons **1, 6, 12 and 13**
-      have the blank and the assert but **no solution cell**, so their asserts
-      fail on a clean run. Their outputs are currently cleared (they ship
-      un-run, showing nothing rather than red errors), but the underlying gap
-      is unfixed:
+### Technical remediation (earlier pass)
 
-      | Lesson | Undefined in the assert |
-      |---|---|
-      | 1 — Getting started | `days`, `days_float` |
-      | 6 — Functions | `add_one`, `A1` |
-      | 12 — Linear algebra in Julia | `dot_v`, `outer_v`, `cross_v` |
-      | 13 — Factorizations | `A_eigv`, `A_diag`, `A_lowertri` |
+- [x] All 13 notebooks execute top-to-bottom under Julia 1.11.3.
+- [x] Kernel metadata consistent; execution counts monotonic `1..N`.
+- [x] `Manifest.toml` tracked; `[compat]` bounds match resolved versions.
+- [x] Lesson numbering `010`–`013` → `10`–`13`; linear-algebra titles disambiguated.
+- [x] No absolute local paths or secrets in committed outputs.
 
-- [ ] **MIN-8 — Add exercises to lessons 10–13.**
-      Lessons 1–9 average 2.2 numbered `Задание` blocks each. Lessons 12 and 13
-      carry an "Упражнения" heading with nothing under it.
+### Course professionalization (this pass)
 
-- [ ] **MIN-9 — Add executable content to lesson 11.**
-      `11 - Linear algebra concepts.ipynb` is 18 Markdown cells with zero code —
-      the only lesson a student cannot run. Either add worked Julia examples or
-      merge it into lesson 12 as a theory preamble.
-
-- [ ] **MIN-10 — Expand the exposition in lesson 2.**
-      945 Cyrillic characters across 9 Markdown cells supporting 19 code cells,
-      roughly a fifth of the prose density of comparable lessons.
-
-- [ ] **MIN-12 — Add cross-lesson navigation.** No next/previous links, no index.
-
-- [ ] **MIN-16 — Split overlong paragraphs** in lessons 10, 13, 3, 7.
-
-- [ ] **MIN-17 — Vary repeated phrasing (optional).** Two sentences appear 3×
-      each; acceptable as a deliberate refrain.
-
----
-
-## Environment caveats found during the re-run
-
-- [ ] **PyCall needs `ENV["PYTHON"]=""` on many Linux systems.**
-      Lesson 10 installs `PyCall` via `Pkg.add`. That builds against the system
-      `python3`, which fails with *"Couldn't find libpython"* on distributions
-      whose Python ships without a shared `libpython` (hit here with Python
-      3.14). The fix is to build against PyCall's own Conda Python:
-
-      ```julia
-      ENV["PYTHON"] = ""
-      using Pkg; Pkg.build("PyCall")
-      ```
-
-      Worth adding to lesson 10 as a troubleshooting note, or students on Linux
-      will hit exactly the failure that made this section broken to begin with.
-
-- [ ] **Lesson 8's UnicodePlots cell renders only interactively.**
-      Under `nbconvert` the cell raises
-      `ArgumentError: Plots(UnicodePlots): saving to '.png' requires 'import
-      FreeType, FileIO'`, because batch execution asks for a PNG while
-      UnicodePlots draws terminal text. Its output is cleared; it works fine in
-      a live session. Adding `FreeType`/`FileIO` to the project would silence it
-      at the cost of two dependencies that nothing else needs.
-
-- [ ] **Notebook `Pkg` calls mutate the project files.**
-      Lessons 7, 8, 10 and 13 contain 16 `Pkg.add`/`Pkg.rm` calls. Running them
-      rewrites `Project.toml`/`Manifest.toml` — during this pass it added
-      `Colors`, `Conda`, `PyCall`, `UnicodePlots` and **silently dropped `Plots`
-      and `PlotlyJS` from `[compat]`**. Both files were restored from a snapshot
-      afterwards. Anyone re-running the notebooks must do the same, or run them
-      against a throwaway environment.
+- [x] **Learning objectives** in all 13 lessons.
+- [x] **Navigation footer** in all 13 lessons (previous / contents / next).
+- [x] **Worked solutions for every exercise.** Closes the `days`, `days_float`,
+      `add_one`, `A1`, `dot_v`, `outer_v`, `cross_v`, `A_eigv`, `A_diag`,
+      `A_lowertri` items, plus gaps found in lessons 2, 7 and 9 that were not
+      previously recorded.
+- [x] **Lesson 11 is executable** — was 18 Markdown cells with no code, now 38
+      code cells. Added `norm`, `rank`, transpose vs adjoint, eigenvalue
+      intuition, and why `A \ b` beats `inv(A) * b`.
+- [x] **Lesson 12 corrected** — the false claim that `A'A` is shorthand for
+      `transpose(A) * A`, the wrong mechanism for underdetermined and
+      rank-deficient solves, and a misleading `Symmetric` example on a
+      non-symmetric matrix.
+- [x] **Lesson 13** — Cholesky preconditions (`isposdef`, `PosDefException`,
+      `check=false`), factorization reuse across right-hand sides, and a
+      rebuilt exercise block. Two of the three old exercises were unpassable:
+      one compared floats with `==`, the other against rounded display values.
+- [x] **Lesson 10** — performance methodology: global-scope benchmarking, type
+      stability with `@code_warntype`, column-major traversal, broadcast fusion.
+      Three new exercises.
+- [x] **Package-environment safety** — lessons 7, 8, 10, 13 no longer mutate
+      the course environment. Lesson 7 teaches `Pkg.activate(; temp=true)`
+      explicitly. Verified by checksum across a full 13-notebook run.
+- [x] **Validation harness** — `tools/check_course.py`, 13 invariants, wired
+      into CI, negative-tested against a broken fixture.
+- [x] **Mathematical corrections** — lesson 11 stated `X = A^{-1}` for the
+      inverse method; the correct formula is `X = A^{-1}B`.
 
 ---
 
-## Structure
+## Open — content
 
-- [ ] **MAJ-8 — Directory restructure.** Deferred for maintainer decision; the
-      proposed layout is in `AUDIT_REPORT.md`. It rewrites every path in the
-      repository, so settle it before the course is published widely.
+- [ ] **MIN-10 — Lesson 2 (Strings) needs depth.**
+      This is the largest remaining content gap. The lesson has 19 code cells
+      supported by only ~9 Markdown cells and does not cover:
+      - the `String` / `Char` distinction in enough depth;
+      - **UTF-8 byte indexing** — the single most important Julia-specific
+        pitfall for anyone arriving from Python, where `s[i]` is a character.
+        In Julia indices are byte offsets and not every offset is valid;
+      - `firstindex` / `lastindex` / `nextind` / `eachindex` for safe traversal;
+      - multiline strings, comparison, and the common `String` functions.
+      Teaching `s[2]` without explaining that it can throw
+      `StringIndexError` on non-ASCII text would leave a real trap in place.
 
-- [ ] **Relocate root-level assets.** `animation.gif` (lesson 8) and
-      `Example.jl` (lesson 7) sit in the repository root. Subsumed by MAJ-8.
+- [ ] **Lesson 9 (Multiple dispatch) deserves flagship treatment.**
+      It correctly shows methods and type annotations, but does not yet:
+      - contrast dispatch with C++/Java overloading (dispatch is on the runtime
+        types of *all* arguments, and resolved dynamically);
+      - show a design where dispatch replaces an `if x isa ...` chain;
+      - discuss method specificity and ambiguity;
+      - warn against over-annotating argument types.
 
-- [x] **CI workflow location.** ✅ At `.github/workflows/ci.yaml`.
+- [ ] **Lesson 3 (Data structures) — the heterogeneity trade-off.**
+      Currently implies `Vector{Any}` is simply bad. The honest framing is a
+      trade-off: `Any` costs a pointer indirection and blocks specialisation,
+      but is the right choice for genuinely heterogeneous data. `NamedTuple`
+      and `struct` should be presented as the usual alternatives.
 
-- [ ] **Switch to a live CI badge.** `README.md` uses a static placeholder.
-      After the workflow's first successful run on `main`, replace it with
-      `https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml/badge.svg`.
-      Kept static for now so `link-check` does not fail on a URL that 404s until
-      the workflow exists on the default branch.
+- [ ] **MIN-16 — long paragraphs** in lessons 3 and 7 (10 and 13 were addressed).
+
+- [ ] **Lesson 8 (Plotting)** — the backend concept is mentioned but not
+      explained; `plot` / `plot!` mutation semantics deserve a short note.
+
+---
+
+## Open — structure
+
+- [ ] **MAJ-8 — directory restructure.** Deliberately not done: stable
+      repository links are worth more than tidier paths right now. If it is
+      ever done, `STRUCTURE_PROPOSAL.md` should be written first.
+
+- [ ] **Live CI badge.** `README.md` uses a static placeholder. Swap it for
+      `https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml/badge.svg`
+      after the workflow's first successful run on `main` — before then the URL
+      404s and would fail the `link-check` job.
+
+- [ ] **Russian table of contents.** Navigation footers link to `README.md`,
+      which is in English. A short Russian course map would serve the actual
+      reader better.
+
+---
+
+## Environment caveats
+
+- [ ] **`PyCall` and `libpython`.** Lesson 10's Python comparison needs a Python
+      with a shared `libpython`; many Linux distributions and Python 3.14 do not
+      ship one. The lesson documents `ENV["PYTHON"]=""` + `Pkg.build("PyCall")`
+      as a conditional remedy. `PyCall` is deliberately **not** a course
+      dependency: putting it in `Project.toml` would break `Pkg.instantiate()`
+      for every student whose system lacks `libpython`.
+
+- [ ] **UnicodePlots renders only interactively.** Under `nbconvert` the backend
+      is asked for a PNG and raises `ArgumentError`. The demonstration is
+      optional and temp-scoped; adding `FreeType`/`FileIO` to silence it would
+      add two dependencies nothing else needs.
 
 ---
 
 ## Won't fix
 
-- **MIN-3 / MIN-4 — Plotly CDN pin and vendor tracking URL.** Both lived in
-  saved PlotlyJS output blobs and were regenerated during the re-run.
+- **MIN-14 — "так же" → "также".** Withdrawn: all occurrences are the
+  comparative "так же, как", which is correct Russian.
 
-- **MIN-14 — "так же" → "также".** Withdrawn. All six occurrences are the
-  comparative "так же, как" ("just as … as"), which is correct Russian. The
-  original finding came from a grep that did not check for the following "как".
+- **MIN-3 / MIN-4 — Plotly CDN pin and vendor tracking URL.** Lived in saved
+  output blobs; regenerated during re-execution.

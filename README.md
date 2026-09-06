@@ -99,10 +99,10 @@ algebra (10–13).
 
 | # | Lesson | Topics |
 |---|---|---|
-| 10 | [Julia is fast](10%20-%20Julia%20is%20fast.ipynb) | Benchmarking with `BenchmarkTools.jl`, comparison against C and Python, why Julia is fast |
-| 11 | [Linear algebra concepts](11%20-%20Linear%20algebra%20concepts.ipynb) | Vectors, matrices, matrix arithmetic, determinants — mathematical theory |
-| 12 | [Linear algebra in Julia](12%20-%20Linear%20algebra%20in%20Julia.ipynb) | The same operations in code: array construction, `*`, `\`, transpose, `LinearAlgebra` |
-| 13 | [Factorizations and other fun](13%20-%20Factorizations%20and%20other%20fun.ipynb) | LU, QR, eigendecompositions, special matrix types, generic linear algebra |
+| 10 | [Julia is fast](10%20-%20Julia%20is%20fast.ipynb) | Benchmarking with `BenchmarkTools.jl`, comparison against C and Python, type stability, allocations, memory order |
+| 11 | [Linear algebra concepts](11%20-%20Linear%20algebra%20concepts.ipynb) | Vectors, matrices, determinants, rank, norms, transpose vs adjoint, eigenvalue intuition — theory, verified in code |
+| 12 | [Linear algebra in Julia](12%20-%20Linear%20algebra%20in%20Julia.ipynb) | `LinearAlgebra` in practice: `dot`, `cross`, `norm`, `det`, `rank`, solving with `\`, structure types, BLAS |
+| 13 | [Factorizations and other fun](13%20-%20Factorizations%20and%20other%20fun.ipynb) | LU, QR, Cholesky, SVD, eigen; preconditions, reusing a factorization, generic linear algebra |
 
 > Lessons 11 and 12 are a matched pair: 11 develops the mathematics, 12
 > implements the same operations in Julia.
@@ -186,6 +186,12 @@ Inside a notebook:
 - **Exercises** are marked `✅ Задание N.M` and are followed by an `@assert` cell that verifies your answer. A green (no output) result means you got it right; a red `AssertionError` means try again.
 - **Some errors are intentional.** Lessons 2, 3, 6, and 9 deliberately trigger `MethodError` and `ParseError` to demonstrate Julia's type system. The surrounding text says so when this is the case.
 
+**Package management is sandboxed.** Lessons 7, 8, 10 and 13 demonstrate
+installing packages. They do so inside a temporary environment
+(`Pkg.activate(; temp=true)`) and restore the course environment afterwards, so
+running any notebook will **not** modify this repository's `Project.toml` or
+`Manifest.toml`. That property is verified by checksum after every full run.
+
 To run the standalone example module used in lesson 7:
 
 ```bash
@@ -196,30 +202,51 @@ julia --project=. -e 'include("Example.jl"); println(hello("Julia"))'
 ### Known issues
 
 All 13 notebooks were last executed top-to-bottom under Julia 1.11.3, so the
-saved outputs match what a clean **Restart & Run All** produces.
+saved outputs match what a clean **Restart & Run All** produces. This is checked
+in CI by `tools/check_course.py`.
 
-**Some errors in the output are intentional.** Lessons 1, 2, 3, 6, and 9
-deliberately trigger `MethodError`, `ParseError`, and `KeyError` to demonstrate
-the type system; the surrounding text says so each time. Those 13 cells are the
-only error outputs in the course.
+**Some errors in the output are intentional.** Lessons 1, 2, 3, 6, 9, 11 and 13
+deliberately raise `MethodError`, `ParseError`, `KeyError`, `DimensionMismatch`
+and `PosDefException` to demonstrate a point; the surrounding text says so each
+time. Those **16 cells are the only error outputs in the course**, and the
+validation script fails the build if any other appears.
 
 Two things to be aware of:
 
-- **Exercises ship un-run.** The `@assert` verification cells below each
-  `# Ваше решение` block have no saved output — that is expected. Run them after
-  writing your solution: no output means it passed. Ten exercises in lessons 1,
-  6, 12, and 13 do not yet include a worked solution cell
-  (see [`TODO.md`](TODO.md)).
-- **`PyCall` in lesson 10 may fail to build on Linux** with *"Couldn't find
-  libpython"* if your system Python has no shared library. Fix it with:
+- **Exercises ship un-run.** The `@assert` cells below each `# Ваше решение`
+  block have no saved output — that is expected. Run them after writing your
+  solution; no output means it passed. Every exercise also has a worked
+  `# Правильное решение` cell, so you can compare.
+- **`PyCall` in lesson 10 may fail to build** with *"Couldn't find libpython"*
+  if your system Python has no shared library — common on Linux, and the case
+  for Python 3.14. Lesson 10 explains the fix in place; the short version is:
 
   ```julia
   ENV["PYTHON"] = ""
   using Pkg; Pkg.build("PyCall")
   ```
 
+  then restart the kernel. Only do this if you actually saw the error.
+
 If a saved output looks wrong, **restart the kernel and run all cells** — your
 own run is the source of truth.
+
+---
+
+## Verifying the course
+
+`tools/check_course.py` validates the invariants that matter for a teaching
+repository and runs in CI:
+
+```bash
+python3 tools/check_course.py
+```
+
+It checks that all 13 notebooks are valid JSON, declare the Julia 1.11.3 kernel,
+have monotonic execution counts, contain no error outputs beyond the reviewed
+intentional set, carry learning objectives and navigation, pair every exercise
+with a worked solution, number exercises to match their lesson, leak no absolute
+local paths or secrets, and have no broken internal links.
 
 ---
 
