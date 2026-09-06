@@ -1,0 +1,96 @@
+# ---------------------------------------------------------------------------
+# Course CI pipeline
+# ---------------------------------------------------------------------------
+# Written in GitHub Actions syntax. GitHub only auto-discovers workflows in
+# `.github/workflows/`, so to activate this pipeline either move/symlink this
+# file there, or port the `jobs:` blocks to your runner of choice (GitLab CI,
+# Woodpecker, Forgejo Actions). The steps themselves are plain shell and
+# portable across runners.
+# ---------------------------------------------------------------------------
+
+name: Course CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # -------------------------------------------------------------------------
+  # 1. Linting -- markdownlint over every Markdown file in the repository.
+  # -------------------------------------------------------------------------
+  lint:
+    name: Lint Markdown
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install markdownlint-cli
+        run: npm install --global markdownlint-cli@0.41.0
+
+      - name: Run markdownlint on all .md files
+        # LICENSE-CC-BY-NC-SA.md is verbatim upstream legal text and must not
+        # be reformatted, so it is excluded from style enforcement.
+        run: |
+          markdownlint \
+            --ignore node_modules \
+            --ignore LICENSE-CC-BY-NC-SA.md \
+            --config .markdownlint.json \
+            "**/*.md"
+
+  # -------------------------------------------------------------------------
+  # 2. Link checking -- verify links in the two generated documents.
+  # -------------------------------------------------------------------------
+  link-check:
+    name: Check links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install markdown-link-check
+        run: npm install --global markdown-link-check@3.12.2
+
+      - name: Check README.md and AUDIT_REPORT.md
+        run: |
+          set -e
+          for doc in README.md AUDIT_REPORT.md; do
+            echo "::group::Checking $doc"
+            markdown-link-check --quiet --retry "$doc"
+            echo "::endgroup::"
+          done
+
+  # -------------------------------------------------------------------------
+  # 3. Build test -- placeholder for the course build/export step.
+  # -------------------------------------------------------------------------
+  build:
+    name: Build course
+    runs-on: ubuntu-latest
+    needs: [lint, link-check]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: echo "Building course..."
