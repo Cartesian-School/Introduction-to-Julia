@@ -1,11 +1,9 @@
 # ---------------------------------------------------------------------------
 # Course CI pipeline
 # ---------------------------------------------------------------------------
-# Written in GitHub Actions syntax. GitHub only auto-discovers workflows in
-# `.github/workflows/`, so to activate this pipeline either move/symlink this
-# file there, or port the `jobs:` blocks to your runner of choice (GitLab CI,
-# Woodpecker, Forgejo Actions). The steps themselves are plain shell and
-# portable across runners.
+# Written in GitHub Actions syntax and located where GitHub auto-discovers it.
+# The steps are plain shell, so the `jobs:` blocks port easily to another
+# runner (GitLab CI, Woodpecker, Forgejo Actions) if needed.
 # ---------------------------------------------------------------------------
 
 name: Course CI

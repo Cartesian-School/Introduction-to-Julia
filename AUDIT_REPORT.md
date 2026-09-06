@@ -133,7 +133,7 @@ without repairing it. Requires Julia to fix — tracked in `TODO.md`.
 > "dry-run regex + heuristic check". Every finding in §1.1 is therefore a
 > *structural* or *staleness* judgement about the URL, not a confirmed HTTP
 > failure. Findings marked **[unverified]** need one CI run of the
-> `link-check` job in `workflow/ci.yaml` to confirm or clear.
+> `link-check` job in `.github/workflows/ci.yaml` to confirm or clear.
 
 **Language note.** The repository is an English-titled fork whose *content* is
 entirely in Russian. Several findings below concern the mismatch between the
@@ -325,7 +325,7 @@ all). Combined with MAJ-1, a student who runs "Restart & Run All" is not
 guaranteed to reproduce the committed outputs.
 
 **Remediation:** Restart-and-run-all each notebook, then commit. Enforce it
-afterwards by adding an `nbconvert --execute` job to `workflow/ci.yaml`.
+afterwards by adding an `nbconvert --execute` job to `.github/workflows/ci.yaml`.
 
 ### MAJ-8 — Flat root directory with no course progression structure
 
@@ -351,7 +351,7 @@ Files that should move out of the root:
 │   └── 02-linear-algebra/  10 … 13
 ├── assets/images/          animation.gif, logo
 ├── examples/               Example.jl
-├── workflow/ci.yaml
+├── .github/workflows/ci.yaml
 ├── Project.toml, Manifest.toml
 └── README.md, LICENSE, LICENSE-CC-BY-NC-SA.md, AUDIT_REPORT.md
 ```
@@ -454,7 +454,7 @@ three or more times across 22 000+ words:
 | `LICENSE-CC-BY-NC-SA.md` | verified complete, left unmodified |
 | `.gitignore` | rewritten — comprehensive; `Manifest.toml` rule reversed (MAJ-1) |
 | `.markdownlint.json` | created — config referenced by the `lint` CI job |
-| `workflow/ci.yaml` | created — lint / link-check / build jobs |
+| `.github/workflows/ci.yaml` | created — lint / link-check / build jobs |
 | `assets/images/logo-placeholder.txt` | created |
 
 No notebook, `Project.toml`, or `Manifest.toml` content was modified — all

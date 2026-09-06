@@ -8,8 +8,53 @@ structure work that needs an author decision or a working Julia toolchain.
 
 ## Blocked — requires Julia 1.11.3
 
-The remediation environment had no Julia installed, so nothing that needs
-notebook execution could be completed or verified.
+The remediation environment had no Julia installed and no permission to
+download one, so nothing that needs notebook execution could be completed or
+verified.
+
+### Runbook
+
+Run this on a machine with network access, then commit the resulting notebooks.
+Keep the depot off any FAT/exFAT volume — Julia needs symlinks and permission
+bits that vfat cannot store.
+
+```bash
+# 1. Install Julia 1.11.3
+curl -fsSL https://install.julialang.org | sh
+juliaup add 1.11.3 && juliaup default 1.11.3
+julia --version          # expect: julia version 1.11.3
+
+# 2. Restore the environment and refresh Manifest.toml's project_hash,
+#    which adding [compat] invalidated.
+cd /path/to/Introduction-to-Julia
+julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.resolve()'
+git diff --stat Manifest.toml    # expect: project_hash only, no version churn
+
+# 3. Install the Jupyter kernel
+julia --project=. -e 'using Pkg; Pkg.add("IJulia")'
+
+# 4. Restart & Run All, in place, for every lesson.
+#    Drop --allow-errors for lessons with no intentional error demos
+#    (04, 05, 07, 08, 11, 12, 13) so a genuine failure stops the run.
+for nb in *.ipynb; do
+  echo "== $nb"
+  jupyter nbconvert --to notebook --execute --inplace \
+    --ExecutePreprocessor.kernel_name=julia-1.11 \
+    --ExecutePreprocessor.timeout=1800 \
+    --allow-errors "$nb" || echo "FAILED: $nb"
+done
+```
+
+Lessons 2, 3, 6, and 9 contain **intentional** `MethodError` / `ParseError`
+demonstrations. Those must survive the re-run; only unintended failures should
+disappear. Diff the error counts before and after rather than assuming a clean
+run is correct.
+
+After re-running, re-check that no local paths crept back in (see NEW-1):
+
+```bash
+grep -l "$(whoami)\|/home/\|C:.Users" *.ipynb
+```
 
 - [ ] **MAJ-5 — Re-run lesson 5 under Julia 1.11.3.**
       `05 - Conditionals.ipynb` still declares a `Julia 1.6.0` kernel. The
@@ -88,10 +133,15 @@ notebook execution could be completed or verified.
       and `Example.jl` (used only by lesson 7) sit in the repository root.
       Subsumed by MAJ-8 if that is adopted.
 
-- [ ] **Decide the CI workflow location.** The pipeline lives at
-      `workflow/ci.yaml`. GitHub Actions only auto-discovers workflows under
-      `.github/workflows/`, so it will not run until it is moved or symlinked
-      there.
+- [x] **CI workflow location.** ✅ Moved to `.github/workflows/ci.yaml`, where
+      GitHub Actions auto-discovers it.
+
+- [ ] **Switch to a live CI badge.** `README.md` currently uses a static
+      placeholder badge. After the workflow's first successful run on `main`,
+      replace it with:
+      `https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml/badge.svg`
+      It is left static for now so the `link-check` job does not fail on a
+      badge URL that 404s until the workflow exists on the default branch.
 
 ---
 

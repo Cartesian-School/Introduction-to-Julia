@@ -6,7 +6,7 @@
 
 **Введение в Julia — a hands-on, 13-lesson course in scientific computing with Julia.**
 
-[![CI](https://img.shields.io/badge/build-not%20yet%20configured-lightgrey.svg)](workflow/ci.yaml)
+[![CI](https://img.shields.io/badge/build-not%20yet%20configured-lightgrey.svg)](.github/workflows/ci.yaml)
 [![Code License: MIT](https://img.shields.io/badge/code%20license-MIT-yellow.svg)](LICENSE)
 [![Content License: CC BY-NC-SA 4.0](https://img.shields.io/badge/content%20license-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE-CC-BY-NC-SA.md)
 [![Julia](https://img.shields.io/badge/julia-1.11.3-9558B2.svg)](https://julialang.org/downloads/)
@@ -239,7 +239,7 @@ In practice:
 
 | Material | Licence | Covers |
 |---|---|---|
-| **Source code** | [MIT](LICENSE) | Julia code cells in the notebooks, `Example.jl`, `workflow/ci.yaml`, `Project.toml` / `Manifest.toml` |
+| **Source code** | [MIT](LICENSE) | Julia code cells in the notebooks, `Example.jl`, `.github/workflows/ci.yaml`, `Project.toml` / `Manifest.toml` |
 | **Course materials** | [CC BY-NC-SA 4.0](LICENSE-CC-BY-NC-SA.md) | Lesson prose, explanations, diagrams, images, exercises, and this README |
 
 Under **CC BY-NC-SA 4.0** you must give appropriate credit (**BY**), may not use
