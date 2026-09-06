@@ -1,127 +1,120 @@
-# TODO — deferred work
+# TODO
 
-Items carried over from [`AUDIT_REPORT.md`](AUDIT_REPORT.md) that were **not**
-fixed. Everything requiring a Julia toolchain has now been completed; what
-remains is content authoring and one structural decision.
+Status of the course. Items are in exactly one of three states:
 
----
+- **✅ Completed** — done and verified by execution or by `tools/check_course.py`.
+- **⏸️ Deferred, non-blocking** — a deliberate decision, not an outstanding defect.
+  Does **not** block publication.
+- **🔴 Open** — a real defect that still needs work.
 
-## Done — notebook regeneration pass (Julia 1.11.3)
-
-All 13 notebooks were re-executed top-to-bottom with `nbconvert --execute`
-against Julia 1.11.3 on Linux. Recorded here so the next maintainer knows what
-state the outputs are in:
-
-- [x] **MAJ-5** — every notebook now reports kernel `Julia 1.11.3`.
-- [x] **MAJ-7** — execution counts are monotonic `1..N` in all 13.
-- [x] **MAJ-4** — lesson 7's `Pkg.add("Plots")` runs clean; 0 errors.
-- [x] **NEW-2** — lesson 10's Python comparison **works**; 0 errors.
-- [x] **Manifest hash** — `Pkg.resolve()` refreshed `project_hash` with no
-      dependency-version churn, confirming the `[compat]` bounds were correct.
-
-Only **13 error outputs** remain across the whole course, and every one is an
-intentional teaching demonstration (lessons 1, 2, 3, 6, 9 — `MethodError`,
-`ParseError`, `KeyError`, all with explanatory prose around them).
+> **There are currently no 🔴 Open items.**
 
 ---
 
-## Content work
+## ✅ Completed
 
-- [ ] **Add worked solutions to the blank exercises.**
-      Lesson 3 follows a three-cell pattern: `# Ваше решение` → `# Правильное
-      решение:` → `@assert`. Ten exercises across lessons **1, 6, 12 and 13**
-      have the blank and the assert but **no solution cell**, so their asserts
-      fail on a clean run. Their outputs are currently cleared (they ship
-      un-run, showing nothing rather than red errors), but the underlying gap
-      is unfixed:
+### Technical remediation
 
-      | Lesson | Undefined in the assert |
-      |---|---|
-      | 1 — Getting started | `days`, `days_float` |
-      | 6 — Functions | `add_one`, `A1` |
-      | 12 — Linear algebra in Julia | `dot_v`, `outer_v`, `cross_v` |
-      | 13 — Factorizations | `A_eigv`, `A_diag`, `A_lowertri` |
+- [x] All 13 notebooks execute top-to-bottom under Julia 1.11.3.
+- [x] Kernel metadata consistent; execution counts monotonic `1..N`.
+- [x] `Manifest.toml` tracked; `[compat]` bounds match resolved versions.
+- [x] Lesson numbering `010`–`013` → `10`–`13`; linear-algebra titles disambiguated.
+- [x] No absolute local paths or secrets in committed outputs.
 
-- [ ] **MIN-8 — Add exercises to lessons 10–13.**
-      Lessons 1–9 average 2.2 numbered `Задание` blocks each. Lessons 12 and 13
-      carry an "Упражнения" heading with nothing under it.
+### Course structure
 
-- [ ] **MIN-9 — Add executable content to lesson 11.**
-      `11 - Linear algebra concepts.ipynb` is 18 Markdown cells with zero code —
-      the only lesson a student cannot run. Either add worked Julia examples or
-      merge it into lesson 12 as a theory preamble.
+- [x] Learning objectives in all 13 lessons.
+- [x] Navigation footer in all 13 lessons.
+- [x] Every exercise has a worked solution and executable verification
+      (**26 verified exercises**).
 
-- [ ] **MIN-10 — Expand the exposition in lesson 2.**
-      945 Cyrillic characters across 9 Markdown cells supporting 19 code cells,
-      roughly a fifth of the prose density of comparable lessons.
+### Lesson content
 
-- [ ] **MIN-12 — Add cross-lesson navigation.** No next/previous links, no index.
+- [x] **Lesson 2 — UTF-8 string indexing.** Was the largest remaining gap.
+      Now teaches `String`/`Char`, `length` vs `ncodeunits`, why indices are byte
+      offsets rather than character ordinals, `firstindex`/`lastindex`/
+      `nextind`/`prevind`, `eachindex`, `for c in s`, and `collect` with its
+      allocation caveat. Includes a **live Cyrillic `StringIndexError`
+      demonstration** on `"Привет"[2]` and an exercise (2.3) checking real
+      understanding of characters versus bytes.
+- [x] **Lesson 3 — heterogeneity as a trade-off.** No longer says `Vector{Any}`
+      is simply bad. Explains boxing, dynamic dispatch and lost specialisation,
+      measures the cost (40 µs / 0 allocations versus 3.1 ms / ~100 000
+      allocations at n = 100 000), and introduces small `Union`s —
+      `Union{Missing, Float64}`, `skipmissing`, `coalesce`, and why
+      `missing == missing` is `missing`.
+- [x] **Lesson 8 — `plot` versus `plot!`.** Explicit section on the `!`
+      convention, working with the plot object explicitly rather than relying on
+      implicit "current plot" state, the backend concept, and exercise 8.3 with
+      object-level structural verification.
+- [x] **Lesson 9 — multiple dispatch to flagship standard.** Method specificity
+      with the type hierarchy, the `isa`-chain anti-pattern rewritten with
+      dispatch, genuine two-argument dispatch, ambiguity and how it is resolved,
+      and a warning against over-annotation. Two new exercises (9.2, 9.3).
+      Also corrected a factual error: the lesson claimed dispatch happens at
+      compile time rather than at runtime.
+- [x] **Lessons 10–13** professionalized in the previous pass (performance
+      methodology, executable linear-algebra bridge, corrected `LinearAlgebra`
+      claims, factorization preconditions and reuse).
+- [x] **MIN-16 — long paragraphs.** Resolved. The one genuinely dense block
+      (lesson 7's advantages list) was reformatted. Lessons 3, 10 and 13 were
+      resolved by the content rewrites. No prose paragraph over 600 characters
+      remains; the two blocks a length heuristic still flags are bulleted lists,
+      already one item per line, and splitting them further would fragment them.
 
-- [ ] **MIN-16 — Split overlong paragraphs** in lessons 10, 13, 3, 7.
+### Environment and tooling
 
-- [ ] **MIN-17 — Vary repeated phrasing (optional).** Two sentences appear 3×
-      each; acceptable as a deliberate refrain.
-
----
-
-## Environment caveats found during the re-run
-
-- [ ] **PyCall needs `ENV["PYTHON"]=""` on many Linux systems.**
-      Lesson 10 installs `PyCall` via `Pkg.add`. That builds against the system
-      `python3`, which fails with *"Couldn't find libpython"* on distributions
-      whose Python ships without a shared `libpython` (hit here with Python
-      3.14). The fix is to build against PyCall's own Conda Python:
-
-      ```julia
-      ENV["PYTHON"] = ""
-      using Pkg; Pkg.build("PyCall")
-      ```
-
-      Worth adding to lesson 10 as a troubleshooting note, or students on Linux
-      will hit exactly the failure that made this section broken to begin with.
-
-- [ ] **Lesson 8's UnicodePlots cell renders only interactively.**
-      Under `nbconvert` the cell raises
-      `ArgumentError: Plots(UnicodePlots): saving to '.png' requires 'import
-      FreeType, FileIO'`, because batch execution asks for a PNG while
-      UnicodePlots draws terminal text. Its output is cleared; it works fine in
-      a live session. Adding `FreeType`/`FileIO` to the project would silence it
-      at the cost of two dependencies that nothing else needs.
-
-- [ ] **Notebook `Pkg` calls mutate the project files.**
-      Lessons 7, 8, 10 and 13 contain 16 `Pkg.add`/`Pkg.rm` calls. Running them
-      rewrites `Project.toml`/`Manifest.toml` — during this pass it added
-      `Colors`, `Conda`, `PyCall`, `UnicodePlots` and **silently dropped `Plots`
-      and `PlotlyJS` from `[compat]`**. Both files were restored from a snapshot
-      afterwards. Anyone re-running the notebooks must do the same, or run them
-      against a throwaway environment.
+- [x] **Package-environment safety.** Lessons 7, 8, 10, 13 no longer mutate the
+      course environment. Lesson 7 teaches `Pkg.activate(; temp=true)` as its
+      own subject matter. Verified by SHA-256 across a full 13-notebook run.
+- [x] **`tools/check_course.py`** — 13 invariants, wired into CI.
+- [x] **`tools/test_check_course.py`** — 15 corruption scenarios, all rejected;
+      a clean control fixture passes. Runs in CI **before** the validator.
 
 ---
 
-## Structure
+## ⏸️ Deferred, non-blocking
 
-- [ ] **MAJ-8 — Directory restructure.** Deferred for maintainer decision; the
-      proposed layout is in `AUDIT_REPORT.md`. It rewrites every path in the
-      repository, so settle it before the course is published widely.
+These are architectural or cosmetic decisions, not defects.
 
-- [ ] **Relocate root-level assets.** `animation.gif` (lesson 8) and
-      `Example.jl` (lesson 7) sit in the repository root. Subsumed by MAJ-8.
+- [ ] **MAJ-8 — directory restructure.**
+      **DEFERRED — NON-BLOCKING ARCHITECTURAL MAINTENANCE.**
+      Explicitly excluded from this pass. Stable repository links are worth more
+      than tidier paths. If it is ever revisited, write `STRUCTURE_PROPOSAL.md`
+      first. This does **not** affect publication readiness.
 
-- [x] **CI workflow location.** ✅ At `.github/workflows/ci.yaml`.
+- [ ] **Live CI badge.** `README.md` uses a static badge by design. A GitHub
+      Actions badge URL returns 404 until the workflow has run on the default
+      branch, which would fail the `link-check` job on the very pull request
+      that introduces it. The README makes no claim about live CI status, so
+      this is not misleading. Swap it after the workflow's first successful run
+      on `main`.
 
-- [ ] **Switch to a live CI badge.** `README.md` uses a static placeholder.
-      After the workflow's first successful run on `main`, replace it with
-      `https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml/badge.svg`.
-      Kept static for now so `link-check` does not fail on a URL that 404s until
-      the workflow exists on the default branch.
+- [ ] **Russian table of contents.** Navigation footers link to `README.md`,
+      which is in English because it is also the GitHub landing page. A separate
+      Russian course map would be a nicety, not a fix.
 
 ---
 
-## Won't fix
+## Environment caveats (documented in the lessons themselves)
 
-- **MIN-3 / MIN-4 — Plotly CDN pin and vendor tracking URL.** Both lived in
-  saved PlotlyJS output blobs and were regenerated during the re-run.
+- **`PyCall` and `libpython`.** Lesson 10's Python comparison needs a Python
+  with a shared `libpython`; many Linux distributions and Python 3.14 ship
+  without one. The lesson documents `ENV["PYTHON"]=""` + `Pkg.build("PyCall")`
+  as a **conditional** remedy — to be applied only if the error appears.
+  `PyCall` is deliberately not a course dependency: adding it to `Project.toml`
+  would break `Pkg.instantiate()` for every student lacking `libpython`.
 
-- **MIN-14 — "так же" → "также".** Withdrawn. All six occurrences are the
-  comparative "так же, как" ("just as … as"), which is correct Russian. The
-  original finding came from a grep that did not check for the following "как".
+- **UnicodePlots renders only interactively.** Under `nbconvert` the backend is
+  asked for a PNG and raises `ArgumentError`. The demonstration is optional and
+  temp-scoped. Adding `FreeType`/`FileIO` to silence it would add two
+  dependencies nothing else needs.
+
+---
+
+## Withdrawn findings
+
+- **MIN-14 — "так же" → "также".** All occurrences are the comparative
+  "так же, как", which is correct Russian.
+- **MIN-3 / MIN-4 — Plotly CDN pin and vendor tracking URL.** Lived in saved
+  output blobs; regenerated during re-execution.
