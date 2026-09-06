@@ -33,7 +33,7 @@ EXPECTED_KERNEL = "Julia 1.11.3"
 # look at the wrapped name inside evalue instead.
 ALLOWED_ERRORS = {
     "01": {"MethodError"},
-    "02": {"ParseError", "Base.Meta.ParseError"},
+    "02": {"ParseError", "Base.Meta.ParseError", "StringIndexError"},
     "03": {"MethodError", "KeyError"},
     "06": {"MethodError"},
     "09": {"MethodError"},

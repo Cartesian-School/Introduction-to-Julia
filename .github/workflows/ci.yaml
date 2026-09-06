@@ -94,6 +94,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Self-test the validator
+        # A validator that always reports PASS is worthless. This builds
+        # deliberately corrupted fixtures and asserts each one is rejected.
+        run: python3 tools/test_check_course.py
+
       - name: Validate course invariants
         # Notebook JSON, kernel consistency, monotonic execution order,
         # unexpected error outputs, leaked local paths and secrets,

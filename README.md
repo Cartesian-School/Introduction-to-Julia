@@ -206,10 +206,10 @@ saved outputs match what a clean **Restart & Run All** produces. This is checked
 in CI by `tools/check_course.py`.
 
 **Some errors in the output are intentional.** Lessons 1, 2, 3, 6, 9, 11 and 13
-deliberately raise `MethodError`, `ParseError`, `KeyError`, `DimensionMismatch`
-and `PosDefException` to demonstrate a point; the surrounding text says so each
-time. Those **16 cells are the only error outputs in the course**, and the
-validation script fails the build if any other appears.
+deliberately raise `MethodError`, `ParseError`, `StringIndexError`, `KeyError`,
+`DimensionMismatch` and `PosDefException` to demonstrate a point; the
+surrounding text says so each time. Those **18 cells are the only error outputs
+in the course**, and CI fails the build if any other appears.
 
 Two things to be aware of:
 
@@ -242,7 +242,10 @@ repository and runs in CI:
 python3 tools/check_course.py
 ```
 
-It checks that all 13 notebooks are valid JSON, declare the Julia 1.11.3 kernel,
+`tools/test_check_course.py` self-tests that validator against 15 deliberately
+corrupted fixtures, so it cannot silently degrade into always reporting PASS.
+
+`check_course.py` checks that all 13 notebooks are valid JSON, declare the Julia 1.11.3 kernel,
 have monotonic execution counts, contain no error outputs beyond the reviewed
 intentional set, carry learning objectives and navigation, pair every exercise
 with a worked solution, number exercises to match their lesson, leak no absolute

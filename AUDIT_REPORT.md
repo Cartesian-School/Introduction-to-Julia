@@ -8,6 +8,49 @@ configuration files, 3 Markdown files, 1 binary asset.
 
 ---
 
+## CURRENT STATUS — publication readiness
+
+**All 13 lessons pass. There are no open pedagogical or execution blockers.**
+
+The material below this section is the historical record of earlier passes and
+is retained for provenance. Where an item is marked open there, **this section
+supersedes it**.
+
+| Area | State |
+|---|---|
+| Lessons 1–13 content, code, exercises, execution, pedagogy | ✅ PASS |
+| Intentional error outputs | 18, each reviewed and documented |
+| Verified exercises | 26 |
+| `tools/check_course.py` | 13/13 invariants pass |
+| `tools/test_check_course.py` | 15/15 corruptions rejected, control passes |
+| `Project.toml` / `Manifest.toml` | byte-identical across a full run (SHA-256) |
+| MAJ-8 directory restructure | ⏸️ DEFERRED — NON-BLOCKING ARCHITECTURAL MAINTENANCE |
+
+### Final pass — the four remaining lessons
+
+| ID | Severity | Finding | Status |
+|---|---|---|---|
+| NEW-16 | Critical | Lesson 9 stated that Julia's dispatch "выполняется на этапе компиляции, а не во время выполнения". Julia's multiple dispatch is semantically **dynamic**, on the runtime types of all arguments; compile-time devirtualization is an optimization, not the definition | ✅ Fixed |
+| NEW-17 | Major | Lesson 2 taught string indexing without UTF-8 byte semantics — a live trap for a Russian-language course, where `"Привет"[2]` raises `StringIndexError` | ✅ Fixed, with an intentional executable demonstration |
+| NEW-18 | Major | Lesson 3 framed `Vector{Any}` as simply bad rather than as a measurable trade-off, and never mentioned small `Union`s such as `Union{Missing, Float64}` | ✅ Fixed |
+| NEW-19 | Major | Lesson 8 never explained `plot` versus `plot!`, the `!` convention, or the backend concept | ✅ Fixed |
+| NEW-20 | Major | Lesson 9 lacked method specificity, the `isa`-chain-versus-dispatch design comparison, genuine multi-argument dispatch, ambiguity, and an over-annotation warning | ✅ Fixed |
+| MIN-16 | Minor | Long paragraphs | ✅ Resolved — see `TODO.md` for the reasoning on the two remaining list-shaped false positives |
+
+### Validator self-test
+
+`tools/test_check_course.py` builds deliberately corrupted course fixtures and
+asserts the validator rejects each. It covers unexpected error output,
+non-monotonic execution counts, absolute Linux and Windows paths, an embedded
+credential, a missing worked solution, a wrong kernel, missing objectives,
+missing navigation, stale output, mis-numbered exercises, a broken internal
+link, a wrong notebook count, and invalid notebook JSON — **15 scenarios, all
+rejected**, plus a clean control that must pass. No allow-list was widened to
+make anything pass; `StringIndexError` was added for **lesson 02 only**, where
+the demonstration lives.
+
+---
+
 ## Professionalization pass (updated 2026-09-06)
 
 A second pass on branch `feat/professionalize-julia-course` took the course from
@@ -25,7 +68,7 @@ A second pass on branch `feat/professionalize-julia-course` took the course from
 | NEW-12 | Major | Notebooks mutated `Project.toml`/`Manifest.toml` on every run, once dropping `Plots` and `PlotlyJS` from `[compat]` | ✅ Fixed via temp environments |
 | NEW-13 | Major | Exercise numbering did not match lesson number (lesson 6 had "Задание 5.x", lesson 12 had "Здание 11.x") | ✅ Fixed |
 | NEW-14 | Minor | Lessons 2, 7, 9 had exercises with unlabelled or absent solutions | ✅ Fixed |
-| NEW-15 | Major | Lesson 2's UTF-8 byte-indexing pitfall is untaught | ⏸️ Open — see `TODO.md` |
+| NEW-15 | Major | Lesson 2's UTF-8 byte-indexing pitfall is untaught | ✅ Fixed in the final pass |
 
 ### Method note
 

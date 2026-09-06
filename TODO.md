@@ -1,14 +1,19 @@
-# TODO — remaining work
+# TODO
 
-Status after the professionalization pass on `feat/professionalize-julia-course`.
-Nothing below is marked done unless it was verified by execution or by
-`tools/check_course.py`.
+Status of the course. Items are in exactly one of three states:
+
+- **✅ Completed** — done and verified by execution or by `tools/check_course.py`.
+- **⏸️ Deferred, non-blocking** — a deliberate decision, not an outstanding defect.
+  Does **not** block publication.
+- **🔴 Open** — a real defect that still needs work.
+
+> **There are currently no 🔴 Open items.**
 
 ---
 
-## Done
+## ✅ Completed
 
-### Technical remediation (earlier pass)
+### Technical remediation
 
 - [x] All 13 notebooks execute top-to-bottom under Julia 1.11.3.
 - [x] Kernel metadata consistent; execution counts monotonic `1..N`.
@@ -16,110 +21,100 @@ Nothing below is marked done unless it was verified by execution or by
 - [x] Lesson numbering `010`–`013` → `10`–`13`; linear-algebra titles disambiguated.
 - [x] No absolute local paths or secrets in committed outputs.
 
-### Course professionalization (this pass)
+### Course structure
 
-- [x] **Learning objectives** in all 13 lessons.
-- [x] **Navigation footer** in all 13 lessons (previous / contents / next).
-- [x] **Worked solutions for every exercise.** Closes the `days`, `days_float`,
-      `add_one`, `A1`, `dot_v`, `outer_v`, `cross_v`, `A_eigv`, `A_diag`,
-      `A_lowertri` items, plus gaps found in lessons 2, 7 and 9 that were not
-      previously recorded.
-- [x] **Lesson 11 is executable** — was 18 Markdown cells with no code, now 38
-      code cells. Added `norm`, `rank`, transpose vs adjoint, eigenvalue
-      intuition, and why `A \ b` beats `inv(A) * b`.
-- [x] **Lesson 12 corrected** — the false claim that `A'A` is shorthand for
-      `transpose(A) * A`, the wrong mechanism for underdetermined and
-      rank-deficient solves, and a misleading `Symmetric` example on a
-      non-symmetric matrix.
-- [x] **Lesson 13** — Cholesky preconditions (`isposdef`, `PosDefException`,
-      `check=false`), factorization reuse across right-hand sides, and a
-      rebuilt exercise block. Two of the three old exercises were unpassable:
-      one compared floats with `==`, the other against rounded display values.
-- [x] **Lesson 10** — performance methodology: global-scope benchmarking, type
-      stability with `@code_warntype`, column-major traversal, broadcast fusion.
-      Three new exercises.
-- [x] **Package-environment safety** — lessons 7, 8, 10, 13 no longer mutate
-      the course environment. Lesson 7 teaches `Pkg.activate(; temp=true)`
-      explicitly. Verified by checksum across a full 13-notebook run.
-- [x] **Validation harness** — `tools/check_course.py`, 13 invariants, wired
-      into CI, negative-tested against a broken fixture.
-- [x] **Mathematical corrections** — lesson 11 stated `X = A^{-1}` for the
-      inverse method; the correct formula is `X = A^{-1}B`.
+- [x] Learning objectives in all 13 lessons.
+- [x] Navigation footer in all 13 lessons.
+- [x] Every exercise has a worked solution and executable verification
+      (**26 verified exercises**).
 
----
+### Lesson content
 
-## Open — content
+- [x] **Lesson 2 — UTF-8 string indexing.** Was the largest remaining gap.
+      Now teaches `String`/`Char`, `length` vs `ncodeunits`, why indices are byte
+      offsets rather than character ordinals, `firstindex`/`lastindex`/
+      `nextind`/`prevind`, `eachindex`, `for c in s`, and `collect` with its
+      allocation caveat. Includes a **live Cyrillic `StringIndexError`
+      demonstration** on `"Привет"[2]` and an exercise (2.3) checking real
+      understanding of characters versus bytes.
+- [x] **Lesson 3 — heterogeneity as a trade-off.** No longer says `Vector{Any}`
+      is simply bad. Explains boxing, dynamic dispatch and lost specialisation,
+      measures the cost (40 µs / 0 allocations versus 3.1 ms / ~100 000
+      allocations at n = 100 000), and introduces small `Union`s —
+      `Union{Missing, Float64}`, `skipmissing`, `coalesce`, and why
+      `missing == missing` is `missing`.
+- [x] **Lesson 8 — `plot` versus `plot!`.** Explicit section on the `!`
+      convention, working with the plot object explicitly rather than relying on
+      implicit "current plot" state, the backend concept, and exercise 8.3 with
+      object-level structural verification.
+- [x] **Lesson 9 — multiple dispatch to flagship standard.** Method specificity
+      with the type hierarchy, the `isa`-chain anti-pattern rewritten with
+      dispatch, genuine two-argument dispatch, ambiguity and how it is resolved,
+      and a warning against over-annotation. Two new exercises (9.2, 9.3).
+      Also corrected a factual error: the lesson claimed dispatch happens at
+      compile time rather than at runtime.
+- [x] **Lessons 10–13** professionalized in the previous pass (performance
+      methodology, executable linear-algebra bridge, corrected `LinearAlgebra`
+      claims, factorization preconditions and reuse).
+- [x] **MIN-16 — long paragraphs.** Resolved. The one genuinely dense block
+      (lesson 7's advantages list) was reformatted. Lessons 3, 10 and 13 were
+      resolved by the content rewrites. No prose paragraph over 600 characters
+      remains; the two blocks a length heuristic still flags are bulleted lists,
+      already one item per line, and splitting them further would fragment them.
 
-- [ ] **MIN-10 — Lesson 2 (Strings) needs depth.**
-      This is the largest remaining content gap. The lesson has 19 code cells
-      supported by only ~9 Markdown cells and does not cover:
-      - the `String` / `Char` distinction in enough depth;
-      - **UTF-8 byte indexing** — the single most important Julia-specific
-        pitfall for anyone arriving from Python, where `s[i]` is a character.
-        In Julia indices are byte offsets and not every offset is valid;
-      - `firstindex` / `lastindex` / `nextind` / `eachindex` for safe traversal;
-      - multiline strings, comparison, and the common `String` functions.
-      Teaching `s[2]` without explaining that it can throw
-      `StringIndexError` on non-ASCII text would leave a real trap in place.
+### Environment and tooling
 
-- [ ] **Lesson 9 (Multiple dispatch) deserves flagship treatment.**
-      It correctly shows methods and type annotations, but does not yet:
-      - contrast dispatch with C++/Java overloading (dispatch is on the runtime
-        types of *all* arguments, and resolved dynamically);
-      - show a design where dispatch replaces an `if x isa ...` chain;
-      - discuss method specificity and ambiguity;
-      - warn against over-annotating argument types.
-
-- [ ] **Lesson 3 (Data structures) — the heterogeneity trade-off.**
-      Currently implies `Vector{Any}` is simply bad. The honest framing is a
-      trade-off: `Any` costs a pointer indirection and blocks specialisation,
-      but is the right choice for genuinely heterogeneous data. `NamedTuple`
-      and `struct` should be presented as the usual alternatives.
-
-- [ ] **MIN-16 — long paragraphs** in lessons 3 and 7 (10 and 13 were addressed).
-
-- [ ] **Lesson 8 (Plotting)** — the backend concept is mentioned but not
-      explained; `plot` / `plot!` mutation semantics deserve a short note.
+- [x] **Package-environment safety.** Lessons 7, 8, 10, 13 no longer mutate the
+      course environment. Lesson 7 teaches `Pkg.activate(; temp=true)` as its
+      own subject matter. Verified by SHA-256 across a full 13-notebook run.
+- [x] **`tools/check_course.py`** — 13 invariants, wired into CI.
+- [x] **`tools/test_check_course.py`** — 15 corruption scenarios, all rejected;
+      a clean control fixture passes. Runs in CI **before** the validator.
 
 ---
 
-## Open — structure
+## ⏸️ Deferred, non-blocking
 
-- [ ] **MAJ-8 — directory restructure.** Deliberately not done: stable
-      repository links are worth more than tidier paths right now. If it is
-      ever done, `STRUCTURE_PROPOSAL.md` should be written first.
+These are architectural or cosmetic decisions, not defects.
 
-- [ ] **Live CI badge.** `README.md` uses a static placeholder. Swap it for
-      `https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml/badge.svg`
-      after the workflow's first successful run on `main` — before then the URL
-      404s and would fail the `link-check` job.
+- [ ] **MAJ-8 — directory restructure.**
+      **DEFERRED — NON-BLOCKING ARCHITECTURAL MAINTENANCE.**
+      Explicitly excluded from this pass. Stable repository links are worth more
+      than tidier paths. If it is ever revisited, write `STRUCTURE_PROPOSAL.md`
+      first. This does **not** affect publication readiness.
+
+- [ ] **Live CI badge.** `README.md` uses a static badge by design. A GitHub
+      Actions badge URL returns 404 until the workflow has run on the default
+      branch, which would fail the `link-check` job on the very pull request
+      that introduces it. The README makes no claim about live CI status, so
+      this is not misleading. Swap it after the workflow's first successful run
+      on `main`.
 
 - [ ] **Russian table of contents.** Navigation footers link to `README.md`,
-      which is in English. A short Russian course map would serve the actual
-      reader better.
+      which is in English because it is also the GitHub landing page. A separate
+      Russian course map would be a nicety, not a fix.
 
 ---
 
-## Environment caveats
+## Environment caveats (documented in the lessons themselves)
 
-- [ ] **`PyCall` and `libpython`.** Lesson 10's Python comparison needs a Python
-      with a shared `libpython`; many Linux distributions and Python 3.14 do not
-      ship one. The lesson documents `ENV["PYTHON"]=""` + `Pkg.build("PyCall")`
-      as a conditional remedy. `PyCall` is deliberately **not** a course
-      dependency: putting it in `Project.toml` would break `Pkg.instantiate()`
-      for every student whose system lacks `libpython`.
+- **`PyCall` and `libpython`.** Lesson 10's Python comparison needs a Python
+  with a shared `libpython`; many Linux distributions and Python 3.14 ship
+  without one. The lesson documents `ENV["PYTHON"]=""` + `Pkg.build("PyCall")`
+  as a **conditional** remedy — to be applied only if the error appears.
+  `PyCall` is deliberately not a course dependency: adding it to `Project.toml`
+  would break `Pkg.instantiate()` for every student lacking `libpython`.
 
-- [ ] **UnicodePlots renders only interactively.** Under `nbconvert` the backend
-      is asked for a PNG and raises `ArgumentError`. The demonstration is
-      optional and temp-scoped; adding `FreeType`/`FileIO` to silence it would
-      add two dependencies nothing else needs.
+- **UnicodePlots renders only interactively.** Under `nbconvert` the backend is
+  asked for a PNG and raises `ArgumentError`. The demonstration is optional and
+  temp-scoped. Adding `FreeType`/`FileIO` to silence it would add two
+  dependencies nothing else needs.
 
 ---
 
-## Won't fix
+## Withdrawn findings
 
-- **MIN-14 — "так же" → "также".** Withdrawn: all occurrences are the
-  comparative "так же, как", which is correct Russian.
-
+- **MIN-14 — "так же" → "также".** All occurrences are the comparative
+  "так же, как", which is correct Russian.
 - **MIN-3 / MIN-4 — Plotly CDN pin and vendor tracking URL.** Lived in saved
   output blobs; regenerated during re-execution.
