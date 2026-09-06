@@ -80,12 +80,33 @@ jobs:
           done
 
   # -------------------------------------------------------------------------
-  # 3. Build test -- placeholder for the course build/export step.
+  # 3. Course integrity -- the invariants that matter for a teaching repo.
+  # -------------------------------------------------------------------------
+  course-checks:
+    name: Course integrity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate course invariants
+        # Notebook JSON, kernel consistency, monotonic execution order,
+        # unexpected error outputs, leaked local paths and secrets,
+        # objectives/navigation, and the exercise/solution contract.
+        run: python3 tools/check_course.py
+
+  # -------------------------------------------------------------------------
+  # 4. Build test -- placeholder for the course build/export step.
   # -------------------------------------------------------------------------
   build:
     name: Build course
     runs-on: ubuntu-latest
-    needs: [lint, link-check]
+    needs: [lint, link-check, course-checks]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
