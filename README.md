@@ -195,19 +195,28 @@ julia --project=. -e 'include("Example.jl"); println(hello("Julia"))'
 
 ### Known issues
 
-Two issues remain open. Both are documented with reproduction details in
-[`AUDIT_REPORT.md`](AUDIT_REPORT.md):
+All 13 notebooks were last executed top-to-bottom under Julia 1.11.3, so the
+saved outputs match what a clean **Restart & Run All** produces.
 
-- **Lesson 10 — the Python comparison section does not run.** Cells 73–114 fail
-  in a cascade after `PyCall` fails to precompile, so the Python and NumPy
-  timings quoted in the lesson's conclusion were not produced by the notebook
-  itself. The Julia-versus-C benchmarks in the same lesson are unaffected.
-- **Lesson 5 was last executed on Julia 1.6.0**, not 1.11.3 like the rest of the
-  course, so its saved outputs come from a different compiler.
+**Some errors in the output are intentional.** Lessons 1, 2, 3, 6, and 9
+deliberately trigger `MethodError`, `ParseError`, and `KeyError` to demonstrate
+the type system; the surrounding text says so each time. Those 13 cells are the
+only error outputs in the course.
 
-Elsewhere, **some errors are intentional** — lessons 2, 3, 6, and 9 deliberately
-trigger `MethodError` and `ParseError` to demonstrate the type system, and the
-surrounding text says so.
+Two things to be aware of:
+
+- **Exercises ship un-run.** The `@assert` verification cells below each
+  `# Ваше решение` block have no saved output — that is expected. Run them after
+  writing your solution: no output means it passed. Ten exercises in lessons 1,
+  6, 12, and 13 do not yet include a worked solution cell
+  (see [`TODO.md`](TODO.md)).
+- **`PyCall` in lesson 10 may fail to build on Linux** with *"Couldn't find
+  libpython"* if your system Python has no shared library. Fix it with:
+
+  ```julia
+  ENV["PYTHON"] = ""
+  using Pkg; Pkg.build("PyCall")
+  ```
 
 If a saved output looks wrong, **restart the kernel and run all cells** — your
 own run is the source of truth.

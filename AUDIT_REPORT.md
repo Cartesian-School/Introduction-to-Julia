@@ -23,10 +23,10 @@ records what changed. Open items are tracked in [`TODO.md`](TODO.md).
 | MAJ-1 `Manifest.toml` untracked | ✅ Fixed — now tracked |
 | MAJ-2 no version bounds | ✅ Fixed — `[compat]` added |
 | MAJ-3 lesson numbering | ✅ Fixed — `010`–`013` → `10`–`13` |
-| MAJ-4 broken install cell | ⚠️ Partial — outputs cleared, not re-run |
-| MAJ-5 kernel 1.6.0 | ⛔ Blocked — needs Julia |
+| MAJ-4 broken install cell | ✅ Fixed — re-run clean under Julia 1.11.3 |
+| MAJ-5 kernel 1.6.0 | ✅ Fixed — re-executed, now Julia 1.11.3 |
 | MAJ-6 duplicate titles | ✅ Fixed — renamed to `11 - Linear algebra concepts` / `12 - Linear algebra in Julia` |
-| MAJ-7 execution order | ⛔ Blocked — needs Julia |
+| MAJ-7 execution order | ✅ Fixed — monotonic 1..N in all 13 |
 | MAJ-8 directory layout | ⏸️ Deferred by decision |
 | MIN-1 stale anchor, MIN-2 twitter→x | ✅ Fixed — MIN-1 target corrected, see below |
 | MIN-6 stray heading | ✅ Fixed |
@@ -111,9 +111,58 @@ The lesson's conclusion cells (166–167) quote specific timings —
 execution never produced**. The prose asserts results the code did not generate.
 The Julia-versus-C benchmarks in the same lesson are unaffected and do run.
 
-These outputs were deliberately **left in place**: clearing them would make a
-non-functional section of the flagship "Julia is fast" lesson look healthy
-without repairing it. Requires Julia to fix — tracked in `TODO.md`.
+**Status:** ✅ **Resolved — repaired, not deleted.** Two separate causes:
+
+1. **PyCall could not build.** The system Python ships without a shared
+   `libpython`. Rebuilding against PyCall's own Conda Python
+   (`ENV["PYTHON"]=""; Pkg.build("PyCall")`) fixed it; `pybuiltin`, `pyimport`
+   and the `py"""` macro all work. The premise that "Python is not available"
+   was wrong, so the section was kept rather than excised.
+
+2. **The results dictionary `d` was never initialised.** No cell in the
+   notebook contained `d = Dict()` — it had survived only as leftover state in
+   the author's interactive session, so the comparison table could never have
+   worked from a clean run. Added an initialising cell that also records the
+   plain-C baseline from `c_bench`, which was likewise being measured and
+   discarded.
+
+Lesson 10 now runs with **zero errors** and produces a real table:
+
+```text
+Julia hand-written simd.....9.1     C..........................11.1
+Julia built-in..............9.3     Julia hand-written.........11.2
+C -ffast-math...............9.4     Python built-in..........1187.0
+Python numpy................9.9     Python hand-written......1677.8
+```
+
+The conclusion cells (166–168) were rewritten against these measurements. The
+old text was not merely numerically stale: it described a two-tier split
+(≈1.8–2.4 ms versus ≈9.4 ms) that does not exist on this hardware, where the
+four vectorised variants cluster within 10% of each other. The rewrite also
+adds a warning that absolute timings are machine-dependent and only the ratios
+matter.
+
+#### NEW-3 (Major, open) — Ten exercises have asserts but no worked solution
+
+Restart & Run All surfaced this: lessons **1, 6, 12 and 13** contain
+`@assert` verification cells whose variables (`days`, `add_one`, `A1`,
+`dot_v`, `outer_v`, `cross_v`, `A_eigv`, `A_diag`, `A_lowertri`) are never
+defined, because the exercise ships with only a blank `# Ваше решение` cell and
+no `# Правильное решение:` cell — the pattern lesson 3 does follow. Previously
+invisible because those cells had never been executed. Their outputs are now
+cleared so the notebooks ship un-run rather than red, but the content gap is
+real. Tracked in `TODO.md`.
+
+#### NEW-4 (Major, resolved) — Two latent bugs hidden by out-of-order execution
+
+Both were invisible until the notebooks were run top-to-bottom, and both are
+exactly what MAJ-7 existed to catch:
+
+- **Lesson 12** — cell 13 rebound `x = 1:5` to demonstrate `collect()`,
+  clobbering the 3-element vector defined at cell 7. Cell 20's `b = A * x` then
+  raised `DimensionMismatch`. The range variable was renamed to `r`.
+- **Lesson 13** — cell 193 printed `eigvals_B`, which no cell ever computed.
+  Now computes `eigvals(B)` before printing it.
 
 ---
 
