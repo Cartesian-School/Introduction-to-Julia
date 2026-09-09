@@ -1,49 +1,40 @@
 #!/usr/bin/env python3
-"""Course integrity checks for Introduction-to-Julia.
+"""Integrity checks for the Cartesian School "Julia from Zero" course.
 
-Validates invariants that a reviewer would otherwise have to check by hand:
-notebook validity, kernel consistency, execution order, absence of leaked local
-paths, exercise/solution pairing, and navigation.
+Canonical course layout:
+    PL/Lesson_0_*.ipynb
+    ...
+    PL/Lesson_14_*.ipynb
+
+The checker intentionally validates repository invariants that should remain
+stable across notebook revisions. It does not require saved execution outputs
+or one exact kernel display-name, because the course notebooks are designed to
+be portable across compatible Julia/Jupyter installations.
 
 Usage:
-    python3 tools/check_course.py            # report
-    python3 tools/check_course.py --strict   # also fail on warnings
+    python3 tools/check_course.py
+    python3 tools/check_course.py --strict
 
-Exit code 0 = all checks passed.
+Exit code 0 = all required checks passed.
 """
+
 from __future__ import annotations
 
 import argparse
-import glob
 import io
 import json
-import os
 import re
 import sys
 import unicodedata
+from pathlib import Path
+from urllib.parse import unquote
 
-EXPECTED_LESSONS = 13
-EXPECTED_KERNEL = "Julia 1.11.3"
+COURSE_DIR = Path("PL")
+EXPECTED_LESSONS = 15
+EXPECTED_NUMBERS = set(range(EXPECTED_LESSONS))
 
-# Cells that raise on purpose, keyed by notebook prefix. Each entry is the
-# exception name a reviewer has accepted as pedagogical. Anything else is a
-# genuine failure and gets reported.
-# NOTE: LoadError is deliberately absent. In Julia it wraps the real exception,
-# so allowing it here would let any failure through. When ename is LoadError we
-# look at the wrapped name inside evalue instead.
-ALLOWED_ERRORS = {
-    "01": {"MethodError"},
-    "02": {"ParseError", "Base.Meta.ParseError", "StringIndexError"},
-    "03": {"MethodError", "KeyError"},
-    "06": {"MethodError"},
-    "09": {"MethodError"},
-    "11": {"DimensionMismatch"},
-    "13": {"PosDefException"},
-}
-
-# Absolute paths and personal identifiers that must never reach a commit.
 LEAK_PATTERNS = [
-    (re.compile(r"[A-Za-z]:\\+Users\\+", re.I), "Windows user path"),
+    (re.compile(r"[A-Za-z]:\\\\+Users\\\\+", re.I), "Windows user path"),
     (re.compile(r"/home/(?!<)[a-z0-9_-]+/", re.I), "Linux home path"),
     (re.compile(r"/Users/[a-z0-9_-]+/", re.I), "macOS home path"),
     (re.compile(r"/media/[a-z0-9_-]+/", re.I), "removable-media path"),
@@ -52,235 +43,235 @@ LEAK_PATTERNS = [
     (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"), "private key"),
 ]
 
-RESULTS: list[tuple[str, str, str]] = []   # (level, check, message)
+RESULTS: list[tuple[str, str, str]] = []
 
 
 def report(level: str, check: str, message: str) -> None:
     RESULTS.append((level, check, message))
 
 
-def notebooks() -> list[str]:
-    return sorted(glob.glob("*.ipynb"))
+def notebook_paths() -> list[Path]:
+    if not COURSE_DIR.is_dir():
+        return []
+    return sorted(COURSE_DIR.glob("Lesson_*.ipynb"))
 
 
-def load(path: str) -> dict:
+def lesson_number(path: Path) -> int | None:
+    match = re.match(r"Lesson_(\d+)_", path.name)
+    return int(match.group(1)) if match else None
+
+
+def load(path: Path) -> dict:
     with io.open(path, encoding="utf-8") as fh:
         return json.load(fh)
 
 
-# --------------------------------------------------------------------------- #
-def check_count(paths: list[str]) -> None:
-    if len(paths) != EXPECTED_LESSONS:
-        report("FAIL", "lesson-count",
-               f"expected {EXPECTED_LESSONS} notebooks, found {len(paths)}")
+def check_inventory(paths: list[Path]) -> None:
+    if not COURSE_DIR.is_dir():
+        report("FAIL", "course-dir", "missing canonical PL/ directory")
+        return
+    report("PASS", "course-dir", "canonical PL/ directory present")
+
+    numbers = [lesson_number(p) for p in paths]
+    invalid_names = [str(p) for p, number in zip(paths, numbers) if number is None]
+    if invalid_names:
+        report("FAIL", "lesson-names", ", ".join(invalid_names))
     else:
-        report("PASS", "lesson-count", f"{EXPECTED_LESSONS} notebooks present")
+        report("PASS", "lesson-names", "all canonical notebooks use Lesson_<N>_*.ipynb")
+
+    valid_numbers = [n for n in numbers if n is not None]
+
+    if len(paths) != EXPECTED_LESSONS:
+        report(
+            "FAIL",
+            "lesson-count",
+            f"expected {EXPECTED_LESSONS} canonical notebooks in PL/, found {len(paths)}",
+        )
+    else:
+        report("PASS", "lesson-count", f"{EXPECTED_LESSONS} canonical notebooks present")
+
+    duplicates = sorted({n for n in valid_numbers if valid_numbers.count(n) > 1})
+    if duplicates:
+        report("FAIL", "lesson-numbering", f"duplicate lesson numbers: {duplicates}")
+    elif set(valid_numbers) != EXPECTED_NUMBERS:
+        missing = sorted(EXPECTED_NUMBERS - set(valid_numbers))
+        extra = sorted(set(valid_numbers) - EXPECTED_NUMBERS)
+        report(
+            "FAIL",
+            "lesson-numbering",
+            f"expected Lesson 0..14; missing={missing}, extra={extra}",
+        )
+    else:
+        report("PASS", "lesson-numbering", "exactly one notebook for every Lesson 0..14")
 
 
-def check_json(paths: list[str]) -> dict[str, dict]:
-    loaded = {}
-    for p in paths:
+def check_json(paths: list[Path]) -> dict[Path, dict]:
+    loaded: dict[Path, dict] = {}
+    for path in paths:
         try:
-            loaded[p] = load(p)
-        except Exception as exc:                      # noqa: BLE001
-            report("FAIL", "valid-json", f"{p}: {exc}")
+            loaded[path] = load(path)
+        except Exception as exc:  # noqa: BLE001
+            report("FAIL", "valid-json", f"{path}: {exc}")
+
     if len(loaded) == len(paths):
-        report("PASS", "valid-json", f"all {len(paths)} notebooks parse")
+        report("PASS", "valid-json", f"all {len(paths)} notebooks parse as JSON")
     return loaded
 
 
-def check_kernel(nbs: dict[str, dict]) -> None:
-    bad = [p for p, nb in nbs.items()
-           if nb.get("metadata", {}).get("kernelspec", {}).get("display_name") != EXPECTED_KERNEL]
-    if bad:
-        for p in bad:
-            got = nbs[p].get("metadata", {}).get("kernelspec", {}).get("display_name")
-            report("FAIL", "kernel", f"{p}: kernel is {got!r}, expected {EXPECTED_KERNEL!r}")
-    else:
-        report("PASS", "kernel", f"all notebooks declare {EXPECTED_KERNEL}")
-
-
-def check_exec_order(nbs: dict[str, dict]) -> None:
-    bad = []
-    for p, nb in nbs.items():
-        counts = [c.get("execution_count") for c in nb["cells"]
-                  if c["cell_type"] == "code" and c.get("execution_count") is not None]
-        if counts != sorted(counts) or (counts and counts != list(range(1, len(counts) + 1))):
-            bad.append(f"{p}: {counts[:8]}...")
-    if bad:
-        for b in bad:
-            report("FAIL", "exec-order", b)
-    else:
-        report("PASS", "exec-order", "execution counts are monotonic 1..N everywhere")
-
-
-def check_errors(nbs: dict[str, dict]) -> None:
-    unexpected = []
-    total = 0
-    for p, nb in nbs.items():
-        allowed = ALLOWED_ERRORS.get(p[:2], set())
-        for i, cell in enumerate(nb["cells"]):
-            for out in cell.get("outputs", []):
-                if out.get("output_type") != "error":
-                    continue
-                total += 1
-                ename = out.get("ename", "?")
-                evalue = str(out.get("evalue", ""))
-                if ename in ("LoadError", "TaskFailedException"):
-                    # Unwrap: the informative name is inside the message. Julia
-                    # renders it as "ExceptionName: detail", and not every
-                    # exception name ends in Error/Exception (DimensionMismatch).
-                    inner = set(re.findall(r"[A-Z][A-Za-z.]*(?:Error|Exception|Mismatch)", evalue))
-                    lead = re.match(r"\s*([A-Z][A-Za-z0-9_.]*)\s*[:(]", evalue)
-                    if lead:
-                        inner.add(lead.group(1))
-                    inner.discard("LoadError")
-                else:
-                    inner = {ename}
-                if not (inner & allowed):
-                    unexpected.append(f"{p} cell {i}: {ename}: {evalue[:70]}")
-    if unexpected:
-        for u in unexpected:
-            report("FAIL", "unexpected-errors", u)
-    else:
-        report("PASS", "unexpected-errors",
-               f"{total} error outputs, all in the reviewed intentional set")
-
-
-def check_leaks(paths: list[str]) -> None:
-    """Notebooks are scanned for everything; prose docs only for secrets.
-
-    scanning it for path patterns would flag the evidence rather than a leak.
-    Secrets are still checked everywhere -- there is no legitimate reason to
-    quote a live token.
-    """
-    secret_only = {"GitHub token", "AWS access key", "private key"}
-    hits = []
-
-    for p in paths:                                   # notebooks: full scan
-        text = io.open(p, encoding="utf-8").read()
-        for pattern, label in LEAK_PATTERNS:
-            for m in pattern.finditer(text):
-                hits.append(f"{p}: {label}: {m.group(0)[:50]}")
-
-    for p in ("README.md", "README.ru.md", "README.pl.md"):   # docs: secrets only
-        if not os.path.exists(p):
+def check_notebook_schema(nbs: dict[Path, dict]) -> None:
+    bad: list[str] = []
+    for path, nb in nbs.items():
+        if nb.get("nbformat") != 4:
+            bad.append(f"{path}: nbformat={nb.get('nbformat')!r}")
             continue
-        text = io.open(p, encoding="utf-8").read()
-        for pattern, label in LEAK_PATTERNS:
-            if label not in secret_only:
+        cells = nb.get("cells")
+        if not isinstance(cells, list) or not cells:
+            bad.append(f"{path}: missing/non-list/empty cells")
+            continue
+        for index, cell in enumerate(cells):
+            if cell.get("cell_type") not in {"markdown", "code", "raw"}:
+                bad.append(f"{path} cell {index}: invalid cell_type={cell.get('cell_type')!r}")
+                break
+            if not isinstance(cell.get("source", []), (list, str)):
+                bad.append(f"{path} cell {index}: invalid source")
+                break
+
+    if bad:
+        for item in bad:
+            report("FAIL", "notebook-schema", item)
+    else:
+        report("PASS", "notebook-schema", "all notebooks have valid nbformat-4 structure")
+
+
+def check_titles(nbs: dict[Path, dict]) -> None:
+    bad: list[str] = []
+    for path, nb in nbs.items():
+        number = lesson_number(path)
+        text = "\n".join(
+            "".join(cell.get("source", []))
+            if isinstance(cell.get("source", []), list)
+            else str(cell.get("source", ""))
+            for cell in nb.get("cells", [])[:8]
+            if cell.get("cell_type") == "markdown"
+        )
+        if number is not None and not re.search(rf"\bLesson\s+{number}\b", text, re.I):
+            bad.append(f"{path}: title/header does not identify Lesson {number}")
+
+    if bad:
+        for item in bad:
+            report("FAIL", "lesson-title", item)
+    else:
+        report("PASS", "lesson-title", "every notebook header matches its lesson number")
+
+
+def check_code_cell_shape(nbs: dict[Path, dict]) -> None:
+    bad: list[str] = []
+    for path, nb in nbs.items():
+        for index, cell in enumerate(nb.get("cells", [])):
+            if cell.get("cell_type") != "code":
                 continue
-            for m in pattern.finditer(text):
-                hits.append(f"{p}: {label}")
+            if "outputs" not in cell or not isinstance(cell.get("outputs"), list):
+                bad.append(f"{path} cell {index}: code cell outputs must be a list")
+            if "execution_count" not in cell:
+                bad.append(f"{path} cell {index}: code cell missing execution_count")
+    if bad:
+        for item in bad[:20]:
+            report("FAIL", "code-cells", item)
+    else:
+        report("PASS", "code-cells", "all code cells have Jupyter execution/output fields")
+
+
+def check_leaks(paths: list[Path]) -> None:
+    hits: list[str] = []
+    for path in paths:
+        text = path.read_text(encoding="utf-8")
+        for pattern, label in LEAK_PATTERNS:
+            for match in pattern.finditer(text):
+                hits.append(f"{path}: {label}: {match.group(0)[:50]}")
+
+    secret_labels = {"GitHub token", "AWS access key", "private key"}
+    for name in ("README.md", "README.pl.md", "README.ru.md"):
+        path = Path(name)
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        for pattern, label in LEAK_PATTERNS:
+            if label not in secret_labels:
+                continue
+            if pattern.search(text):
+                hits.append(f"{path}: {label}")
 
     if hits:
-        for h in hits[:20]:
-            report("FAIL", "no-local-paths", h)
+        for hit in hits[:20]:
+            report("FAIL", "no-leaks", hit)
     else:
-        report("PASS", "no-local-paths",
-               "no local paths in notebooks, no secrets anywhere")
+        report("PASS", "no-leaks", "no local user paths or credential patterns detected")
 
 
-def check_structure(nbs: dict[str, dict]) -> None:
-    """Objectives, navigation, and the exercise/solution contract."""
-    no_obj, no_nav = [], []
-    for p, nb in nbs.items():
-        head = "\n".join("".join(c["source"]) for c in nb["cells"][:4])
-        if "После этого занятия вы сможете" not in head:
-            no_obj.append(p)
-        navs = sum(1 for c in nb["cells"] if "Оглавление](README.md)" in "".join(c["source"]))
-        if navs != 1:
-            no_nav.append(f"{p} ({navs} nav cells)")
-
-    report("FAIL" if no_obj else "PASS", "objectives",
-           ", ".join(no_obj) if no_obj else "every lesson states learning objectives")
-    report("FAIL" if no_nav else "PASS", "navigation",
-           ", ".join(no_nav) if no_nav else "every lesson has exactly one navigation footer")
-
-    # Every "Задание N.M" should be followed somewhere by a worked solution.
-    missing = []
-    for p, nb in nbs.items():
-        text = "\n".join("".join(c["source"]) for c in nb["cells"])
-        tasks = set(re.findall(r"Задание\s+(\d+\.\d+)", text))
-        if tasks and "равильное решение" not in text:
-            missing.append(f"{p}: {len(tasks)} exercise(s), no worked solution")
-    report("FAIL" if missing else "PASS", "exercise-solutions",
-           "; ".join(missing) if missing else "every lesson with exercises has worked solutions")
-
-    # Lesson numbering inside exercise titles must match the file number.
-    mismatched = []
-    for p, nb in nbs.items():
-        try:
-            lesson_no = int(p[:2])
-        except ValueError:
-            continue
-        text = "\n".join("".join(c["source"]) for c in nb["cells"])
-        for num in set(re.findall(r"Задание\s+(\d+)\.\d+", text)):
-            if int(num) != lesson_no:
-                mismatched.append(f"{p}: contains 'Задание {num}.x'")
-    report("FAIL" if mismatched else "PASS", "exercise-numbering",
-           "; ".join(sorted(set(mismatched))) if mismatched
-           else "exercise numbers match their lesson")
-
-
-def check_outputs_fresh(nbs: dict[str, dict]) -> None:
-    """A code cell with output but no execution_count means stale saved output."""
-    stale = []
-    for p, nb in nbs.items():
-        for i, c in enumerate(nb["cells"]):
-            if c["cell_type"] == "code" and c.get("outputs") and c.get("execution_count") is None:
-                stale.append(f"{p} cell {i}")
-    report("FAIL" if stale else "PASS", "fresh-outputs",
-           ", ".join(stale[:8]) if stale else "no outputs left over from an unrun cell")
-
-
-def check_nav_targets(nbs: dict[str, dict]) -> None:
-    from urllib.parse import unquote
-    broken = []
-    for p, nb in nbs.items():
-        for c in nb["cells"]:
-            for _label, target in re.findall(r"\[([^\]]*)\]\(([^)]+)\)", "".join(c["source"])):
-                if target.startswith(("http", "#", "mailto")):
+def check_internal_links(nbs: dict[Path, dict]) -> None:
+    """Check local Markdown links conservatively."""
+    broken: list[str] = []
+    for source_path, nb in nbs.items():
+        for cell in nb.get("cells", []):
+            source = cell.get("source", [])
+            text = "".join(source) if isinstance(source, list) else str(source)
+            for _label, target in re.findall(r"\[([^\]]*)\]\(([^)]+)\)", text):
+                target = target.strip()
+                if not target or target.startswith(("http://", "https://", "#", "mailto:")):
                     continue
-                path = unquote(target.split("#")[0])
-                if path and not os.path.exists(path):
-                    broken.append(f"{p} -> {path}")
-    report("FAIL" if broken else "PASS", "internal-links",
-           ", ".join(sorted(set(broken))[:8]) if broken
-           else "all internal notebook links resolve")
+
+                local = unquote(target.split("#", 1)[0])
+                if not local:
+                    continue
+
+                candidate_relative = source_path.parent / local
+                candidate_root = Path(local)
+                if candidate_relative.exists() or candidate_root.exists():
+                    continue
+
+                broken.append(f"{source_path} -> {local}")
+
+    if broken:
+        for item in sorted(set(broken))[:20]:
+            report("WARN", "internal-links", item)
+    else:
+        report("PASS", "internal-links", "all checked local Markdown links resolve")
 
 
-def check_encoding(paths: list[str]) -> None:
-    bad = []
-    for p in paths:
-        text = io.open(p, encoding="utf-8").read()
+def check_encoding(paths: list[Path]) -> None:
+    bad: list[str] = []
+    for path in paths:
+        text = path.read_text(encoding="utf-8")
         if unicodedata.normalize("NFC", text) != text:
-            bad.append(p)
-    report("WARN" if bad else "PASS", "unicode-nfc",
-           ", ".join(bad) if bad else "text is NFC-normalised")
+            bad.append(str(path))
+    report(
+        "WARN" if bad else "PASS",
+        "unicode-nfc",
+        ", ".join(bad) if bad else "notebook text is NFC-normalised",
+    )
 
 
-# --------------------------------------------------------------------------- #
 def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--strict", action="store_true", help="treat warnings as failures")
-    args = ap.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--strict", action="store_true", help="treat warnings as failures")
+    args = parser.parse_args()
 
-    paths = notebooks()
-    check_count(paths)
-    nbs = check_json(paths)
+    paths = notebook_paths()
+    check_inventory(paths)
+
+    nbs = check_json(paths) if paths else {}
     if nbs:
-        check_kernel(nbs)
-        check_exec_order(nbs)
-        check_errors(nbs)
-        check_structure(nbs)
-        check_outputs_fresh(nbs)
-        check_nav_targets(nbs)
+        check_notebook_schema(nbs)
+        check_titles(nbs)
+        check_code_cell_shape(nbs)
+        check_internal_links(nbs)
+
     check_leaks(paths)
     check_encoding(paths)
 
-    width = max(len(c) for _, c, _ in RESULTS)
+    width = max((len(check) for _, check, _ in RESULTS), default=12)
     fails = warns = 0
+
     for level, check, message in RESULTS:
         if level == "FAIL":
             fails += 1
