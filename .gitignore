@@ -52,6 +52,7 @@ docs/site/
 /.julia/
 *.cov
 
+
 # NOTE: Manifest.toml is intentionally NOT ignored.
 # This repository is an application (a course environment), not a library, so
 # the exact resolved dependency set must be committed for reproducibility.
@@ -63,6 +64,7 @@ docs/site/
 */.ipynb_checkpoints/*
 profile_default/
 ipython_config.py
+.jupiter/
 
 # ---------------------------------------------------------------------------
 # Python (tooling: markdownlint wrappers, nbconvert, link checkers)
@@ -86,6 +88,13 @@ env/
 ENV/
 *.egg-info/
 .eggs/
+# Python
+.py
+Project.toml
+Manifest.toml
+.env/
+env/
+
 
 # ---------------------------------------------------------------------------
 # Node (markdownlint-cli, lychee/markdown-link-check, etc.)
