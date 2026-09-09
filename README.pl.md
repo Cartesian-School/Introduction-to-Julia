@@ -1,19 +1,17 @@
 <div align="center">
 
-<!-- Logo:
-<img src="assets/images/logo.png" alt="Introduction to Julia" width="220">
--->
+# Julia od zera
 
-# Introduction to Julia
+### Programowanie, obliczenia naukowe i metody numeryczne w Julia
 
-**Praktyczny, 13-lekcyjny kurs języka Julia do obliczeń naukowych i numerycznych.**
+**Praktyczny kurs dla programistów — od podstaw języka do projektu końcowego.**
 
-[![Course CI](https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml/badge.svg?branch=main&event=push)](https://github.com/Cartesian-School/Introduction-to-Julia/actions/workflows/ci.yaml)
+[![Course CI](https://github.com/Cartesian-School/Julia-from-zero/actions/workflows/ci.yaml/badge.svg?branch=main&event=push)](https://github.com/Cartesian-School/Julia-from-zero/actions/workflows/ci.yaml)
 [![Code License: MIT](https://img.shields.io/badge/code%20license-MIT-yellow.svg)](LICENSE)
-[![Content License: CC BY-NC-SA 4.0](https://img.shields.io/badge/content%20license-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE-CC-BY-NC-SA.md)
-[![Julia](https://img.shields.io/badge/julia-1.11.3-9558B2.svg)](https://julialang.org/downloads/)
-![Lessons](https://img.shields.io/badge/lessons-13-blue.svg)
-![Language](https://img.shields.io/badge/course%20language-Russian-red.svg)
+[![Course Content: CC BY-NC-SA 4.0](https://img.shields.io/badge/course%20content-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE-CC-BY-NC-SA.md)
+[![Julia](https://img.shields.io/badge/Julia-1.11.x-9558B2.svg)](https://julialang.org/)
+![Lessons](https://img.shields.io/badge/lessons-15-blue.svg)
+![Language](https://img.shields.io/badge/course%20language-Polish-red.svg)
 
 [English](README.md) · [Русский](README.ru.md) · **Polski**
 
@@ -23,33 +21,155 @@
 
 ## O kursie
 
-**Introduction to Julia** to praktyczny kurs dla programistów, którzy chcą poznać język Julia poprzez wykonywalne przykłady, a nie wyłącznie przez teorię.
+**Julia od zera** to praktyczny kurs języka Julia przygotowany przez **Cartesian School** dla osób, które znają już podstawowe pojęcia programistyczne i chcą nauczyć się Julii od początku — od składni i struktur danych po programowanie wysokiej wydajności, algebrę liniową, metody numeryczne i kompletny projekt końcowy.
 
-Kurs rozpoczyna się od podstaw języka, a następnie przechodzi do zagadnień, w których Julia jest szczególnie mocna: obliczeń naukowych, metod numerycznych i programowania wysokiej wydajności.
+„Od zera” oznacza tutaj **od zera w języku Julia**, a nie pierwszy kontakt z programowaniem. Kurs nie wymaga wcześniejszej znajomości Julii, ale zakłada rozumienie takich pojęć jak zmienna, funkcja, pętla, instrukcja warunkowa i podstawowy typ danych.
 
-Zakres kursu obejmuje:
+Kurs zawiera **15 lekcji, numerowanych od Lesson 0 do Lesson 14**. Materiał prowadzi od pierwszego notebooka do projektu **ThermalLab**, który łączy modelowanie, multiple dispatch, wizualizację, analizę wydajności, algebrę liniową i metody numeryczne.
 
-- napisy i Unicode;
-- struktury danych oraz instrukcje sterujące;
-- funkcje i broadcasting;
-- zarządzanie pakietami i odtwarzalne środowiska;
-- wizualizację i tworzenie wykresów;
-- wielokrotną dyspozycję metod;
-- benchmarkowanie i analizę wydajności;
-- numeryczną algebrę liniową;
-- faktoryzacje macierzy.
+Polska wersja kursu znajduje się w katalogu [`PL/`](PL/).
 
-Wszystkie lekcje przygotowano w postaci notebooków Jupyter. Każdy notebook łączy objaśnienia, wykonywalne przykłady, ćwiczenia, rozwiązania wzorcowe i automatyczną weryfikację wyników.
+---
 
-Materiał bazuje na kursie JuliaAcademy *Introduction to Julia* i został znacząco zaadaptowany, rozszerzony, zweryfikowany i zaktualizowany dla Julia **1.11.3**. Obecna edycja zawiera również dodatkowe materiały z zakresu wydajności, numerycznej algebry liniowej i faktoryzacji macierzy.
+## Publiczny kurs i cel projektu
+
+Repozytorium jest publicznie dostępne, aby ułatwić naukę Julii i przyczynić się do popularyzacji języka oraz jego ekosystemu — szczególnie wśród polskojęzycznych programistów, studentów i inżynierów.
+
+Autor kursu chce w ten sposób wspierać społeczność Julia poprzez:
+
+- tworzenie dostępnych materiałów edukacyjnych w języku polskim;
+- pokazywanie praktycznych zastosowań Julii w programowaniu, obliczeniach naukowych i metodach numerycznych;
+- udostępnianie przykładów, ćwiczeń i projektów, które można samodzielnie uruchamiać i analizować;
+- zachęcanie do dalszej pracy z oficjalną dokumentacją i pakietami ekosystemu Julia.
+
+### Ważne rozróżnienie licencyjne
+
+Kod autorstwa Cartesian School jest udostępniany na licencji **MIT** i ma charakter open source.
+
+Autorskie materiały dydaktyczne Cartesian School są udostępniane na licencji **CC BY-NC-SA 4.0**. Oznacza to, że można je kopiować, adaptować i rozwijać zgodnie z warunkami tej licencji, w tym z obowiązkiem atrybucji i ograniczeniem zastosowań komercyjnych.
+
+Materiały pochodzące ze źródeł zewnętrznych pozostają objęte ich własnymi licencjami i wymaganiami dotyczącymi atrybucji.
+
+---
+
+## Czego nauczysz się w tym kursie
+
+Po ukończeniu kursu będziesz potrafić:
+
+- pisać czytelny i idiomatyczny kod w Julia;
+- pracować z napisami Unicode, krotkami, słownikami, zbiorami, wektorami i macierzami;
+- stosować pętle, warunki, comprehensions, broadcasting i iteratory;
+- projektować funkcje z argumentami pozycyjnymi, nazwanymi, domyślnymi i varargs;
+- rozumieć różnicę między funkcją a metodą;
+- wykorzystywać **multiple dispatch** jako mechanizm projektowania rozszerzalnego API;
+- zarządzać pakietami i środowiskami przez `Pkg`, `Project.toml` i `Manifest.toml`;
+- tworzyć wykresy i analizować dane z użyciem `Plots.jl`;
+- poprawnie mierzyć wydajność i interpretować benchmarki;
+- rozpoznawać wpływ JIT, alokacji, stabilności typów i lokalności pamięci;
+- wykonywać praktyczne obliczenia algebry liniowej;
+- rozwiązywać układy równań przez operator `\`;
+- stosować LU, QR, Cholesky, SVD, EVD i rozkład Schura;
+- rozumieć specjalne struktury macierzy;
+- analizować błędy numeryczne, conditioning i stabilność;
+- implementować podstawowe metody znajdowania miejsc zerowych, całkowania i różniczkowania numerycznego;
+- rozwiązywać proste ODE metodami Eulera i RK4;
+- zbudować kompletny projekt łączący model danych, algorytmy, testy, wydajność, wizualizację i raportowanie.
+
+---
+
+## Dla kogo jest ten kurs
+
+Kurs jest przeznaczony przede wszystkim dla:
+
+- programistów Python, C, C++, Rust, Java, MATLAB, R i innych języków;
+- studentów i absolwentów kierunków technicznych;
+- inżynierów pracujących z modelowaniem i obliczeniami;
+- osób zainteresowanych scientific computing, analizą danych i metodami numerycznymi;
+- programistów, którzy chcą zrozumieć charakterystyczny dla Julii model programowania oparty na multiple dispatch.
+
+### Wymagania wstępne
+
+| Wymaganie | Poziom |
+|---|---|
+| Podstawy programowania | **Wymagane** |
+| Wcześniejsza znajomość Julia | **Nie jest wymagana** |
+| Jupyter Notebook / JupyterLab | Pomocne, ale niewymagane |
+| Algebra liniowa | Pomocna od Lesson 10; podstawy są omawiane w kursie |
+| Metody numeryczne | Niewymagane; wprowadzane w Lesson 13 |
+
+---
+
+## Struktura kursu
+
+### Blok I — Fundamenty języka Julia
+
+| Lesson | Temat | Notebook |
+|---:|---|---|
+| 0 | **Getting Started** | [Otwórz Lesson 0](PL/Lesson_0_Julia_Cartesian_School_PL.ipynb) |
+| 1 | **Strings** | [Otwórz Lesson 1](PL/Lesson_1_Strings_Julia_Cartesian_School_PL.ipynb) |
+| 2 | **Data Structures** | [Otwórz Lesson 2](PL/Lesson_2_Data_Structures_Julia_Cartesian_School_PL.ipynb) |
+| 3 | **Loops** | [Otwórz Lesson 3](PL/Lesson_3_Loops_Julia_Cartesian_School_PL.ipynb) |
+| 4 | **Conditionals** | [Otwórz Lesson 4](PL/Lesson_4_Conditionals_Julia_Cartesian_School_PL.ipynb) |
+| 5 | **Functions** | [Otwórz Lesson 5](PL/Lesson_5_Functions_Julia_Cartesian_School_PL.ipynb) |
+
+### Blok II — Ekosystem, wizualizacja i model programowania Julii
+
+| Lesson | Temat | Notebook |
+|---:|---|---|
+| 6 | **Packages** | [Otwórz Lesson 6](PL/Lesson_6_Packages_Julia_Cartesian_School_PL.ipynb) |
+| 7 | **Plotting** | [Otwórz Lesson 7](PL/Lesson_7_Plotting_Julia_Cartesian_School_PL.ipynb) |
+| 8 | **Multiple Dispatch** | [Otwórz Lesson 8](PL/Lesson_8_Multiple_Dispatch_Julia_Cartesian_School_PL.ipynb) |
+
+### Blok III — Wydajność i algebra liniowa
+
+| Lesson | Temat | Notebook |
+|---:|---|---|
+| 9 | **Julia is Fast** | [Otwórz Lesson 9](PL/Lesson_9_Julia_is_Fast_Cartesian_School_PL.ipynb) |
+| 10 | **Linear Algebra Concepts** | [Otwórz Lesson 10](PL/Lesson_10_Linear_Algebra_Concepts_Julia_Cartesian_School_PL.ipynb) |
+| 11 | **Linear Algebra in Julia** | [Otwórz Lesson 11](PL/Lesson_11_Linear_Algebra_in_Julia_Cartesian_School_PL.ipynb) |
+| 12 | **Factorizations and Other Fun** | [Otwórz Lesson 12](PL/Lesson_12_Factorizations_and_Other_Fun_Julia_Cartesian_School_PL.ipynb) |
+
+### Blok IV — Metody numeryczne i projekt końcowy
+
+| Lesson | Temat | Notebook |
+|---:|---|---|
+| 13 | **Numerical Computing** | [Otwórz Lesson 13](PL/Lesson_13_Numerical_Computing_Julia_Cartesian_School_PL.ipynb) |
+| 14 | **Final Project / Capstone — ThermalLab** | [Otwórz Lesson 14](PL/Lesson_14_Final_Project_Capstone_Julia_Cartesian_PL.ipynb) |
+
+> W katalogu `PL/` znajduje się również wcześniejszy wariant notebooka Lesson 0: `Lesson_0_Julia_Cartesian_School_Professional.ipynb`. W tabeli powyżej wskazany jest plik traktowany jako kanoniczna polska Lesson 0.
+
+---
+
+## Projekt końcowy — ThermalLab
+
+Lesson 14 jest projektem integrującym materiał z całego kursu.
+
+**ThermalLab** modeluje proces chłodzenia zgodnie z prawem Newtona i obejmuje:
+
+- własne typy `ThermalModel`, `MeasurementSet` i `SimulationResult`;
+- abstrakcyjny interfejs integratora;
+- implementacje Euler i RK4 przez multiple dispatch;
+- generowanie syntetycznych danych pomiarowych;
+- estymację parametru modelu przez least squares;
+- residuals, MAE, RMSE i `R²`;
+- porównanie dokładności i kosztu obliczeń;
+- opcjonalne wykresy przez `Plots.jl`;
+- eksport wyników do CSV;
+- testy kontraktowe i walidację danych.
+
+Projekt pokazuje pełny przepływ:
+
+> **problem → model → kod → obliczenia → walidacja → wynik**
 
 ---
 
 ## Język kursu
 
-**Główna treść dydaktyczna jest napisana po rosyjsku.** Nazwy plików, kod Julia, nazwy API oraz większość identyfikatorów technicznych pozostają w języku angielskim.
+Kanoniczna polska wersja dydaktyczna znajduje się w katalogu [`PL/`](PL/).
 
-Dokumentacja repozytorium jest dostępna w trzech wersjach językowych:
+Tekst lekcji jest przygotowany po polsku. Kod Julia, nazwy funkcji, API, identyfikatory i techniczne terminy wymagające zgodności z dokumentacją pozostają w języku angielskim.
+
+Dokumentacja repozytorium jest rozwijana w trzech wersjach:
 
 - **English:** [README.md](README.md)
 - **Русский:** [README.ru.md](README.ru.md)
@@ -57,268 +177,167 @@ Dokumentacja repozytorium jest dostępna w trzech wersjach językowych:
 
 ---
 
-## Efekty uczenia się
-
-Po ukończeniu kursu będziesz potrafić:
-
-- **pisać idiomatyczny kod w Julii** z użyciem zmiennych, napisów, instrukcji sterujących, funkcji, funkcji anonimowych, broadcastingu i konwencji mutacji;
-- **pracować z podstawowymi strukturami danych Julii** — krotkami, krotkami nazwanymi, słownikami, wektorami, macierzami i tablicami;
-- **poprawnie obsługiwać napisy Unicode** i rozumieć różnicę między iteracją po znakach a indeksowaniem UTF-8;
-- **używać wielokrotnej dyspozycji jako narzędzia projektowego**, a nie jedynie jako mechanizmu przeciążania metod;
-- **zarządzać pakietami i odtwarzalnymi środowiskami** przy użyciu `Pkg`, `Project.toml` i `Manifest.toml`;
-- **tworzyć wykresy i wizualizacje** z użyciem `Plots.jl` i różnych backendów;
-- **poprawnie mierzyć wydajność kodu Julia** za pomocą `BenchmarkTools.jl` oraz rozumieć wpływ kompilacji, alokacji, stabilności typów i kolejności dostępu do pamięci;
-- **rozwiązywać zadania numerycznej algebry liniowej** z użyciem wektorów, macierzy, norm, wyznaczników, układów równań liniowych i struktur macierzowych;
-- **dobierać i stosować faktoryzacje macierzy**, w tym LU, QR, Cholesky, SVD oraz rozkład własny.
-
----
-
-## Dla kogo jest ten kurs
-
-Kurs jest przeznaczony dla osób, które już potrafią programować i chcą dodać Julię do swojego zestawu narzędzi.
-
-### Wymagania wstępne
-
-| Wymaganie | Poziom |
-|---|---|
-| Doświadczenie programistyczne | **Wymagane.** Wystarczy Python, MATLAB, R, C, C++, Java lub inny język. |
-| Znajomość języka rosyjskiego | **Wymagana do czytania objaśnień.** |
-| Znajomość Jupyter | **Pomocna.** Podstawy są omówione w lekcji 1. |
-| Algebra liniowa | **Pomocna dla lekcji 11–13.** Niezbędne podstawy są wprowadzane w lekcji 11. |
-| Wcześniejsza znajomość Julii | **Nie jest wymagana.** |
-
-Kurs **nie jest przeznaczony jako pierwszy kurs programowania**. Zakłada znajomość takich pojęć jak zmienne, pętle, instrukcje warunkowe i funkcje.
-
----
-
-## Zawartość kursu
-
-Kurs jest podzielony na dwa bloki:
-
-1. **Podstawy języka Julia** — lekcje 1–9
-2. **Wydajność i numeryczna algebra liniowa** — lekcje 10–13
-
-### Blok 1 — Podstawy języka Julia
-
-| Nr | Lekcja | Główne zagadnienia |
-|---|---|---|
-| 1 | [Getting started](01%20-%20Getting%20started.ipynb) | Uruchamianie Julii, zmienne, wyjście, komentarze, arytmetyka |
-| 2 | [Strings](02%20-%20Strings.ipynb) | Napisy, `Char`, interpolacja, konkatenacja, UTF-8, bezpieczne indeksowanie Unicode |
-| 3 | [Data structures](03%20-%20Data%20structures.ipynb) | Krotki, krotki nazwane, słowniki, wektory, macierze, tablice, mutowalność, typy elementów |
-| 4 | [Loops](04%20-%20Loops.ipynb) | `while`, `for`, zakresy, iteracja po kolekcjach |
-| 5 | [Conditionals](05%20-%20Conditionals.ipynb) | `if` / `elseif` / `else`, operator trójargumentowy, short-circuit evaluation |
-| 6 | [Functions](06%20-%20Functions.ipynb) | Formy deklaracji funkcji, funkcje anonimowe, programowanie generyczne, konwencja `!`, broadcasting |
-| 7 | [Packages](07%20-%20Packages.ipynb) | `Pkg`, środowiska, instalowanie pakietów, odtwarzalność |
-| 8 | [Plotting](08%20-%20Plotting.ipynb) | `Plots.jl`, `plot`, `plot!`, backendy, etykiety, wiele serii, animacja |
-| 9 | [Multiple dispatch](09%20-%20Multiple%20dispatch.ipynb) | Funkcje generyczne, metody, hierarchia typów, specyficzność, wielokrotna dyspozycja |
-
-### Blok 2 — Wydajność i numeryczna algebra liniowa
-
-| Nr | Lekcja | Główne zagadnienia |
-|---|---|---|
-| 10 | [Julia is fast](10%20-%20Julia%20is%20fast.ipynb) | Benchmarkowanie, kompilacja, stabilność typów, alokacje, układ pamięci, porównanie z C i Pythonem |
-| 11 | [Linear algebra concepts](11%20-%20Linear%20algebra%20concepts.ipynb) | Wektory, macierze, normy, rząd, wyznaczniki, transpozycja vs sprzężenie hermitowskie, układy równań |
-| 12 | [Linear algebra in Julia](12%20-%20Linear%20algebra%20in%20Julia.ipynb) | `LinearAlgebra`, `dot`, `cross`, `norm`, `det`, `rank`, `\`, macierze strukturalne, podstawy BLAS |
-| 13 | [Factorizations and other fun](13%20-%20Factorizations%20and%20other%20fun.ipynb) | LU, QR, Cholesky, SVD, wartości i wektory własne, ponowne użycie faktoryzacji |
-
-> Lekcje 11 i 12 tworzą spójną parę: w lekcji 11 omawiane są podstawy matematyczne, a w lekcji 12 te same operacje są realizowane bezpośrednio w Julii.
-
----
-
 ## Instalacja
 
 ### 1. Zainstaluj Julię
 
-Wszystkie notebooki zostały zweryfikowane dla **Julia 1.11.3**.
+Kurs jest rozwijany dla serii **Julia 1.11.x**.
 
-Na Linuxie i macOS przy użyciu `juliaup`:
+Oficjalne instrukcje instalacji:
 
-```bash
-curl -fsSL https://install.julialang.org | sh
-juliaup add 1.11.3
-juliaup default 1.11.3
-```
+<https://julialang.org/downloads/>
 
-Sprawdź instalację:
+Po instalacji sprawdź:
 
 ```bash
 julia --version
 ```
 
-Oczekiwany wynik:
-
-```text
-julia version 1.11.3
-```
-
-W systemie Windows możesz zainstalować Julię przez `juliaup` z Microsoft Store lub użyć oficjalnego instalatora dostępnego na stronie [Julia Downloads](https://julialang.org/downloads/).
-
----
-
 ### 2. Sklonuj repozytorium
 
 ```bash
-git clone https://github.com/Cartesian-School/Introduction-to-Julia.git
-cd Introduction-to-Julia
+git clone https://github.com/Cartesian-School/Julia-from-zero.git
+cd Julia-from-zero
 ```
 
----
-
-### 3. Odtwórz środowisko kursu
-
-W katalogu głównym repozytorium uruchom:
+### 3. Odtwórz środowisko
 
 ```bash
 julia --project=. -e 'using Pkg; Pkg.instantiate()'
 ```
 
-Polecenie instaluje zależności zapisane w `Project.toml` i `Manifest.toml`.
+Repozytorium wykorzystuje:
 
-> Pierwsze uruchomienie może potrwać kilka minut z powodu prekompilacji niektórych pakietów.
+- `Project.toml` — deklarowane zależności;
+- `Manifest.toml` — rozwiązane wersje zależności.
 
----
+### 4. Uruchom Jupyter
 
-### 4. Zainstaluj kernel Jupyter
-
-```bash
-julia --project=. -e 'using Pkg; Pkg.add("IJulia"); using IJulia'
-```
-
-Jeśli Jupyter nie jest jeszcze zainstalowany, `IJulia` może zaproponować instalację prywatnego środowiska Miniconda.
-
----
-
-### 5. Uruchom notebooki
-
-Przez IJulia:
+Jeżeli używasz IJulia:
 
 ```bash
 julia --project=. -e 'using IJulia; notebook(dir=".")'
 ```
 
-Lub, jeśli Jupyter jest już zainstalowany:
+lub:
 
 ```bash
 jupyter lab
 ```
 
+Po uruchomieniu przejdź do katalogu `PL/` i rozpocznij od:
+
+[`PL/Lesson_0_Julia_Cartesian_School_PL.ipynb`](PL/Lesson_0_Julia_Cartesian_School_PL.ipynb)
+
 ---
 
 ## Jak pracować z kursem
 
-Przechodź przez lekcje w kolejności numerycznej.
+Przechodź przez notebooki od **Lesson 0** do **Lesson 14**.
 
-W notebookach:
+Zalecany sposób pracy:
 
-- uruchamiaj komórki skrótem **`Shift+Enter`**;
-- wykonuj komórki od góry do dołu;
-- ćwiczenia są oznaczone jako `✅ Задание N.M`;
-- miejsce na własne rozwiązanie jest oznaczone jako `# Ваше решение`;
-- rozwiązanie wzorcowe jest oznaczone jako `# Правильное решение`;
-- weryfikacja odbywa się najczęściej przez `@assert` lub inną wykonywalną kontrolę.
+1. przeczytaj cel sekcji;
+2. uruchom przykład;
+3. przeanalizuj wynik;
+4. wykonaj zadanie samodzielnie;
+5. dopiero potem porównaj rozwiązanie;
+6. sprawdź `@assert` i checkpoint;
+7. przed przejściem dalej upewnij się, że rozumiesz przyczynę działania kodu, nie tylko jego składnię.
 
-Poprawnie wykonany `@assert` zwykle nie generuje żadnego wyjścia.
+W kursie stosowany jest wspólny schemat:
 
-Niektóre wyjątki są wywoływane **celowo w celach dydaktycznych**. W takich miejscach przyczyna błędu jest wyjaśniona bezpośrednio obok odpowiedniej komórki.
-
----
-
-## Odtwarzalność
-
-Kurs został zaprojektowany tak, aby uruchamianie notebooków nie modyfikowało w sposób niejawny środowiska samego repozytorium.
-
-Demonstracje zarządzania pakietami używają, gdy jest to potrzebne, środowisk izolowanych lub tymczasowych, a wbudowany walidator sprawdza kluczowe niezmienniki projektu.
-
-Kanoniczne środowisko definiują:
-
-- [`Project.toml`](Project.toml)
-- [`Manifest.toml`](Manifest.toml)
-
-Wszystkie 13 notebooków zostało wykonanych od początku do końca w środowisku Julia 1.11.3.
+| Element | Znaczenie |
+|---|---|
+| **Cel** | rezultat danego fragmentu |
+| **Teoria** | definicja lub reguła |
+| **Przykład** | wykonywalny kod |
+| **Analiza** | interpretacja działania |
+| **Ważne** | istotna zasada |
+| **Typowy błąd** | częsty problem |
+| **Spróbuj sam** | krótki eksperyment |
+| **Praktyka** | zadanie |
+| **Podsumowanie** | najważniejsze wnioski |
 
 ---
 
-## Walidacja kursu
+## Odtwarzalność i bezpieczeństwo środowiska
 
-Repozytorium zawiera walidator całego kursu:
+Kurs jest projektowany tak, aby przykłady dotyczące pakietów nie modyfikowały niejawnie środowiska projektu.
+
+W szczególności:
+
+- notebook nie powinien automatycznie wykonywać `Pkg.add(...)` bez wyraźnej potrzeby;
+- eksperymenty z pakietami mogą używać środowisk tymczasowych;
+- zależności projektu należy odtwarzać przez `Pkg.instantiate()`;
+- kod korzystający z pakietów opcjonalnych powinien zachowywać się przewidywalnie również wtedy, gdy pakiet nie jest zainstalowany.
+
+---
+
+## Walidacja repozytorium
+
+Repozytorium posiada workflow CI w `.github/workflows/ci.yaml`.
+
+Jeżeli w repozytorium dostępne są narzędzia:
 
 ```bash
 python3 tools/check_course.py
-```
-
-Sprawdza on między innymi:
-
-- poprawność JSON notebooków;
-- zgodność kernela Julia;
-- kolejność `execution_count`;
-- brak nieoczekiwanych błędów w outputach;
-- obecność celów lekcji i nawigacji;
-- strukturę „ćwiczenie / rozwiązanie”;
-- poprawność numeracji ćwiczeń;
-- wewnętrzne linki;
-- brak absolutnych ścieżek lokalnych;
-- brak przypadkowo ujawnionych sekretów lub danych przypominających credentials.
-
-Sam walidator jest dodatkowo testowany na celowo uszkodzonych przypadkach:
-
-```bash
 python3 tools/test_check_course.py
 ```
 
-Kontrole te są zintegrowane z CI.
+należy uruchamiać je przed scaleniem zmian do `main`.
+
+Po zmianach w notebookach należy również:
+
+1. uruchomić notebook od początku do końca;
+2. sprawdzić brak nieoczekiwanych wyjątków;
+3. zweryfikować nawigację i linki;
+4. sprawdzić zgodność środowiska;
+5. upewnić się, że CI obejmuje aktualny zestaw polskich notebooków.
+
+**README nie powinien twierdzić, że wszystkie 15 lekcji przeszły wykonanie end-to-end, dopóki aktualna wersja repozytorium nie została w ten sposób zweryfikowana.**
 
 ---
 
-## Uwagi dotyczące uruchamiania
+## Jakość techniczna
 
-### Celowe wyjątki
+Przy rozwijaniu kursu zwracamy szczególną uwagę na:
 
-Niektóre lekcje celowo wywołują wyjątki, aby pokazać zachowanie Julii, między innymi:
-
-- `MethodError`
-- `ParseError`
-- `StringIndexError`
-- `KeyError`
-- `DimensionMismatch`
-- `PosDefException`
-
-Takie błędy są uznawane za poprawne wyłącznie wtedy, gdy są jawnie wyjaśnione w treści lekcji obok odpowiedniej komórki.
-
-### `PyCall` w lekcji 10
-
-Na niektórych systemach Linux `PyCall` może nie zbudować się poprawnie, jeśli wybrana instalacja Pythona nie udostępnia zgodnej współdzielonej biblioteki `libpython`.
-
-Jeśli wystąpi taki błąd, można przebudować `PyCall` z użyciem zarządzanego środowiska Pythona:
-
-```julia
-ENV["PYTHON"] = ""
-using Pkg
-Pkg.build("PyCall")
-```
-
-Następnie uruchom ponownie kernel Julii.
-
-Stosuj to obejście tylko wtedy, gdy rzeczywiście pojawi się odpowiadający mu błąd kompilacji.
+- poprawność semantyki Julia;
+- poprawność przykładów API;
+- prawidłową pracę z Unicode;
+- rozróżnienie broadcastingu i algebry liniowej;
+- prawidłowe użycie multiple dispatch;
+- rzetelną metodologię benchmarkingu;
+- rozróżnienie stabilności algorytmu od conditioning problemu;
+- poprawność numeryczną;
+- niewprowadzające w błąd porównania wydajności;
+- reprodukowalne środowiska;
+- spójność dydaktyczną Lesson 0–14.
 
 ---
 
-## Jakość repozytorium
+## Pochodzenie materiałów i atrybucja
 
-Obecna edycja kursu została zweryfikowana pod kątem:
+Historyczna baza części repozytorium wywodzi się z materiałów edukacyjnych JuliaAcademy / JuliaTutorials.
 
-- zgodności z Julia 1.11.3;
-- poprawności matematycznej;
-- poprawności numerycznej algebry liniowej;
-- semantyki wielokrotnej dyspozycji;
-- indeksowania UTF-8 w napisach;
-- odtwarzalności środowiska pakietów;
-- kolejności wykonania komórek;
-- kompletności ćwiczeń;
-- rozdzielenia błędów celowych i przypadkowych;
-- braku wycieków lokalnych ścieżek i danych uwierzytelniających;
-- spójności dydaktycznej wszystkich 13 lekcji.
+Obecna edycja **Julia od zera** została znacząco przebudowana i rozszerzona przez Cartesian School: zmieniono strukturę dydaktyczną, język, ćwiczenia, zakres tematyczny i organizację materiału, a także dodano nowe treści dotyczące wydajności, algebry liniowej, faktoryzacji, metod numerycznych i projektu końcowego.
 
-Szczegółową historię audytu znajdziesz w:
+Materiały zewnętrzne zachowują swoje pierwotne prawa autorskie, warunki licencyjne i wymagania atrybucji.
+
+Repozytorium Cartesian School nie jest oficjalnym kursem projektu Julia ani oficjalnym produktem JuliaHub.
+
+---
+
+## Licencjonowanie
+
+| Materiał | Licencja |
+|---|---|
+| Kod autorstwa Cartesian School | [MIT License](LICENSE) |
+| Autorskie materiały dydaktyczne Cartesian School | [CC BY-NC-SA 4.0](LICENSE-CC-BY-NC-SA.md) |
+| Materiały zewnętrzne | zgodnie z ich własnymi licencjami i wymaganiami atrybucji |
+
+Licencja dotycząca materiałów Cartesian School nie zastępuje licencji materiałów stron trzecich.
 
 ---
 
@@ -328,63 +347,49 @@ Issues i pull requesty są mile widziane.
 
 Przed wysłaniem zmian:
 
-1. uruchom ponownie kernel zmodyfikowanego notebooka;
-2. wykonaj notebook od początku do końca;
-3. upewnij się, że zapisane outputy odpowiadają aktualnemu kodowi;
-4. uruchom:
-
-```bash
-python3 tools/check_course.py
-python3 tools/test_check_course.py
-```
-
-Unikaj niezwiązanych ze zmianą modyfikacji formatowania JSON notebooków, ponieważ znacząco utrudniają one code review.
+1. wykonaj zmieniony notebook od początku do końca;
+2. sprawdź aktualność zapisanych wyników;
+3. uruchom walidatory repozytorium;
+4. zweryfikuj linki Markdown;
+5. unikaj przypadkowych zmian formatowania JSON notebooków;
+6. nie dodawaj lokalnych ścieżek, sekretów, tokenów ani danych uwierzytelniających.
 
 ---
 
-## Licencjonowanie
+## Kontakt
 
-Repozytorium korzysta z podwójnego modelu licencjonowania.
+**Autor:** Siergej Sobolewski  
+**Projekt:** Cartesian School  
+**E-mail:** [s.sobolewski@hotmail.com](mailto:s.sobolewski@hotmail.com)
 
-| Materiał | Licencja | Zakres |
-|---|---|---|
-| Kod źródłowy | [MIT License](LICENSE) | Komórki z kodem Julia, skrypty pomocnicze, konfiguracja CI, pliki środowiska |
-| Materiały kursowe | [CC BY-NC-SA 4.0](LICENSE-CC-BY-NC-SA.md) | Tekst lekcji, wyjaśnienia, ćwiczenia, diagramy, obrazy, README |
+Repozytorium:
 
-Licencja **CC BY-NC-SA 4.0** wymaga podania autorstwa, zabrania użycia komercyjnego bez odrębnego zezwolenia i wymaga rozpowszechniania utworów zależnych na tych samych warunkach.
+<https://github.com/Cartesian-School/Julia-from-zero>
 
-Komercyjne wykorzystanie materiałów kursowych — w tym płatne szkolenia, warsztaty korporacyjne lub włączenie kursu do odpłatnego produktu edukacyjnego — wymaga odrębnej pisemnej zgody właściciela praw.
+Jeżeli znajdziesz błąd merytoryczny, techniczny, językowy lub numeryczny, możesz:
 
-### Prawa autorskie
-
-- Copyright © 2018–2020 Julia Computing, Inc. — oryginalne materiały JuliaAcademy *Introduction to Julia*.
-- Copyright © 2026 Siergej Sobolewski — rosyjska adaptacja, modernizacja i dodatkowe materiały kursowe.
+- utworzyć GitHub Issue;
+- wysłać Pull Request;
+- skontaktować się z autorem drogą e-mailową.
 
 ---
 
 ## Podziękowania
 
-Kurs bazuje na pracy społeczności Julia oraz zespołu JuliaAcademy.
+Dziękujemy:
 
-Szczególne podziękowania dla:
-
-- **[Julia Computing](https://juliacomputing.com/)** i zespołu JuliaAcademy — za oryginalny kurs *Introduction to Julia*;
-- **[Andreas Noack Jensen](https://x.com/anoackjensen)** — za oryginalne materiały dotyczące algebry liniowej i faktoryzacji wykorzystane przy opracowywaniu późniejszych lekcji;
-- **społeczności Julia** — za język, dokumentację, pakiety i ekosystem wykorzystany w kursie.
-
----
-
-## Utrzymanie kursu
-
-Cartesian School
-
-Repozytorium: [github.com/Cartesian-School/Introduction-to-Julia](https://github.com/Cartesian-School/Introduction-to-Julia)
-
-Jeśli znajdziesz błąd, chcesz zaproponować poprawkę lub usprawnienie kursu — utwórz GitHub Issue lub Pull Request.
+- twórcom języka Julia;
+- społeczności Julia;
+- autorom oficjalnej dokumentacji i pakietów;
+- autorom materiałów JuliaAcademy / JuliaTutorials, od których historycznie rozpoczęła się część tego repozytorium.
 
 ---
 
 <div align="center">
+
+### Cartesian School
+
+**Learn Programming. Build Real Software. Master AI.**
 
 [English](README.md) · [Русский](README.ru.md) · **Polski**
 
