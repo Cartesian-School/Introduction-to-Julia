@@ -4,7 +4,7 @@
 
 # Julia od zera
 
-### Programowanie, obliczenia naukowe i metody numeryczne w Julia
+## Programowanie, obliczenia naukowe i metody numeryczne w Julia
 
 **Praktyczny kurs dla programistów — od podstaw języka do projektu końcowego.**
 
@@ -29,7 +29,7 @@
 
 Kurs zawiera **15 lekcji, numerowanych od Lesson 0 do Lesson 14**. Materiał prowadzi od pierwszego notebooka do projektu **ThermalLab**, który łączy modelowanie, multiple dispatch, wizualizację, analizę wydajności, algebrę liniową i metody numeryczne.
 
-Polska wersja kursu znajduje się w katalogu [`PL/`](PL/).
+Polska wersja kursu znajduje się w katalogu [`PL/`](PL/), a rosyjska wersja kursu w katalogu [`RU/`](RU/).
 
 ---
 
@@ -138,8 +138,6 @@ Kurs jest przeznaczony przede wszystkim dla:
 | 13 | **Numerical Computing** | [Otwórz Lesson 13](PL/Lesson_13_Numerical_Computing_Julia_Cartesian_School_PL.ipynb) |
 | 14 | **Final Project / Capstone — ThermalLab** | [Otwórz Lesson 14](PL/Lesson_14_Final_Project_Capstone_Julia_Cartesian_PL.ipynb) |
 
-> W katalogu `PL/` znajduje się również wcześniejszy wariant notebooka Lesson 0: `Lesson_0_Julia_Cartesian_School_Professional.ipynb`. W tabeli powyżej wskazany jest plik traktowany jako kanoniczna polska Lesson 0.
-
 ---
 
 ## Projekt końcowy — ThermalLab
@@ -167,7 +165,7 @@ Projekt pokazuje pełny przepływ:
 
 ## Język kursu
 
-Kanoniczna polska wersja dydaktyczna znajduje się w katalogu [`PL/`](PL/).
+Kanoniczne wersje dydaktyczne znajdują się w katalogach [`PL/`](PL/) i [`RU/`](RU/).
 
 Tekst lekcji jest przygotowany po polsku. Kod Julia, nazwy funkcji, API, identyfikatory i techniczne terminy wymagające zgodności z dokumentacją pozostają w języku angielskim.
 
@@ -227,9 +225,10 @@ lub:
 jupyter lab
 ```
 
-Po uruchomieniu przejdź do katalogu `PL/` i rozpocznij od:
+Po uruchomieniu przejdź do wybranego katalogu językowego i rozpocznij od Lesson 0:
 
 [`PL/Lesson_0_Julia_Cartesian_School_PL.ipynb`](PL/Lesson_0_Julia_Cartesian_School_PL.ipynb)
+[`RU/Lesson_0_Julia_Cartesian_School_RU.ipynb`](RU/Lesson_0_Julia_Cartesian_School_RU.ipynb)
 
 ---
 

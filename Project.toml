@@ -1,9 +1,9 @@
-# Course environment for "Introduction to Julia".
+# Course environment for "Julia from Zero".
 #
 # This is an *application* project (a pinned teaching environment), not a
 # library, so it deliberately carries no `name`/`uuid`/`version` keys:
 #   * Julia package names must be valid identifiers, so the repository name
-#     "Introduction-to-Julia" cannot be used verbatim; and
+#     "Julia-from-zero" cannot be used verbatim; and
 #   * declaring a name/uuid makes Pkg treat this directory as a package and
 #     look for `src/<Name>.jl` during precompilation, which would break the
 #     `Pkg.instantiate()` step documented in README.md.
