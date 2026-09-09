@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="https://raw.githubusercontent.com/JuliaLang/julia-logo-graphics/master/images/julia-logo-color.svg" alt="Julia language logo" width="220" />
+
 # Julia od zera
 
 ### Programowanie, obliczenia naukowe i metody numeryczne w Julia
@@ -13,7 +15,7 @@
 ![Lessons](https://img.shields.io/badge/lessons-15-blue.svg)
 ![Language](https://img.shields.io/badge/course%20language-Polish-red.svg)
 
-[English](README.md) · [Русский](README.ru.md) · **Polski**
+**Polski** · [English](README.md) · [Русский](README.ru.md)
 
 </div>
 
@@ -172,8 +174,8 @@ Tekst lekcji jest przygotowany po polsku. Kod Julia, nazwy funkcji, API, identyf
 Dokumentacja repozytorium jest rozwijana w trzech wersjach:
 
 - **English:** [README.md](README.md)
-- **Русский:** [README.ru.md](README.ru.md)
 - **Polski:** [README.pl.md](README.pl.md)
+- **Русский:** [README.ru.md](README.ru.md)
 
 ---
 

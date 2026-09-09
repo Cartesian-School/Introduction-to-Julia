@@ -1,8 +1,6 @@
 <div align="center">
 
-<!-- Логотип:
-<img src="assets/images/logo.png" alt="Introduction to Julia" width="220">
--->
+<img src="https://raw.githubusercontent.com/JuliaLang/julia-logo-graphics/master/images/julia-logo-color.svg" alt="Julia language logo" width="220" />
 
 # Introduction to Julia
 
@@ -15,7 +13,7 @@
 ![Lessons](https://img.shields.io/badge/lessons-13-blue.svg)
 ![Language](https://img.shields.io/badge/course%20language-Russian-red.svg)
 
-[English](README.md) · **Русский** · [Polski](README.pl.md)
+ **Русский** · [Polski](README.pl.md) · [English](README.md)
 
 </div>
 
@@ -51,9 +49,10 @@
 
 Документация репозитория доступна на трёх языках:
 
-- **English:** [README.md](README.md)
 - **Русский:** [README.ru.md](README.ru.md)
 - **Polski:** [README.pl.md](README.pl.md)
+- **English:** [README.md](README.md)
+
 
 ---
 
