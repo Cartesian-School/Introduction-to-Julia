@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/JuliaLang/julia-logo-graphics/master/images/julia-logo-color.svg" alt="Julia language logo" width="220" />
+<img src="https://github.com/Cartesian-School/Julia-from-zero/blob/main/assets/images/kurs_logo.png" alt="Julia language logo" width="420" />
 
 # Julia od zera
 
