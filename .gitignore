@@ -90,9 +90,6 @@ ENV/
 *.egg-info/
 .eggs/
 # Python
-.py
-Project.toml
-Manifest.toml
 .env/
 env/
 

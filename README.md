@@ -4,7 +4,7 @@
 
 # Julia from Zero
 
-### Programming, Scientific Computing, and Numerical Methods in Julia
+## Programming, Scientific Computing, and Numerical Methods in Julia
 
 **A practical course for programmers — from the first notebook to a complete capstone project.**
 
@@ -29,7 +29,7 @@
 
 The course contains **15 lessons, numbered from Lesson 0 to Lesson 14**. The material progresses from the first notebook to the capstone project **ThermalLab**, which combines modeling, multiple dispatch, visualization, performance analysis, linear algebra, and numerical computing.
 
-The Polish lesson notebooks are stored in the [`PL/`](PL/) directory.
+The Polish lesson notebooks are stored in the [`PL/`](PL/) directory, and the Russian lesson notebooks are stored in the [`RU/`](RU/) directory.
 
 ---
 
@@ -138,8 +138,6 @@ This course is especially suitable for:
 | 13 | **Numerical Computing** | [Open Lesson 13](PL/Lesson_13_Numerical_Computing_Julia_Cartesian_School_PL.ipynb) |
 | 14 | **Final Project / Capstone — ThermalLab** | [Open Lesson 14](PL/Lesson_14_Final_Project_Capstone_Julia_Cartesian_PL.ipynb) |
 
-> The `PL/` directory also contains an earlier Lesson 0 variant: `Lesson_0_Julia_Cartesian_School_Professional.ipynb`. The table above points to the canonical Polish Lesson 0 file.
-
 ---
 
 ## Capstone project — ThermalLab
@@ -167,7 +165,7 @@ The project demonstrates the full workflow:
 
 ## Repository languages
 
-The canonical lesson content of this edition is currently developed **in Polish** and stored in [`PL/`](PL/).
+The canonical lesson content of this edition is maintained in **Polish** and **Russian** and stored in [`PL/`](PL/) and [`RU/`](RU/).
 
 The repository documentation is maintained in three languages:
 
@@ -227,9 +225,10 @@ or simply:
 jupyter lab
 ```
 
-Then go to the `PL/` directory and start with:
+Then go to the language directory you want to use and start with Lesson 0:
 
 [`PL/Lesson_0_Julia_Cartesian_School_PL.ipynb`](PL/Lesson_0_Julia_Cartesian_School_PL.ipynb)
+[`RU/Lesson_0_Julia_Cartesian_School_RU.ipynb`](RU/Lesson_0_Julia_Cartesian_School_RU.ipynb)
 
 ---
 
