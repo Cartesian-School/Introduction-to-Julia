@@ -65,6 +65,7 @@ docs/site/
 profile_default/
 ipython_config.py
 .jupiter/
+example.ipynb
 
 # ---------------------------------------------------------------------------
 # Python (tooling: markdownlint wrappers, nbconvert, link checkers)
